@@ -50,13 +50,13 @@ public class MemberController {
 	}
 	
 	@ApiOperation(value="사용자 정보 변경", notes="사용자 정보 변경")
-	@PutMapping("/updateMember/{memberId}")
+	@PutMapping("/{memberId}")
 		public String updatMember( @ApiParam(name = "memberId", value = "사용자 고유 아이디", required = true) @PathVariable String memberId, @RequestBody MemberDto memberDto) {
 			return memberService.updateMember(memberId, memberDto);
 		}
 	
 	@ApiOperation(value="사용자 탈퇴", notes="사용자 탈퇴")
-	@DeleteMapping("/deleteMember/{memberId}")
+	@DeleteMapping("/{memberId}")
 	public String deleteMember(
 			@ApiParam(name = "memberId", value = "사용자 고유 아이디", required = true)
 			@PathVariable String memberId) {
