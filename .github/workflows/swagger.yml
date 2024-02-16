@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - swagger
-      - book
+      
       - member
       
 permissions:
