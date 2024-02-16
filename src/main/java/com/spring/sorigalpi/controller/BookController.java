@@ -91,7 +91,9 @@ public class BookController {
 		
 		return new ResponseEntity<>(basicResponse, HttpStatus.OK);
 	}
-	
+	@ApiOperation(
+			value = "동화책 테이블 정보 수정 API",
+			notes = "동화책 수정") 
 	@PutMapping("updateBook")
 	public void updateBook() { //동화책 수정
 		
