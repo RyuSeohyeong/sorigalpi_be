@@ -3,7 +3,10 @@ name: Build and Generate Swagger JSON
 on:
   push:
     branches:
+      - master
       - swagger
+      - book
+      - member
       
 permissions:
   contents: write
