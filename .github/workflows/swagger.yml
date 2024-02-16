@@ -107,4 +107,4 @@ jobs:
           git remote add sorigalpi_swagger https://${GITHUB_TOKEN}@github.com/RyuSeohyeong/sorigalpi_swagger.git
           git add swagger.json
           git commit -m "Update Swagger"
-          git push -f ui-repo main
+          git push -f sorigalpi_swagger main
