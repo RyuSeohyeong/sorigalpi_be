@@ -104,7 +104,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SORIGALPI_SECRET }}
         run: |
           cd sorigalpi_swagger
-          git remote add ui-repo https://${GITHUB_TOKEN}@github.com/RyuSeohyeong/sorigalpi_swagger.git
+          git remote add sorigalpi_swagger https://${GITHUB_TOKEN}@github.com/RyuSeohyeong/sorigalpi_swagger.git
           git add swagger.json
           git commit -m "Update Swagger"
           git push -f ui-repo main
