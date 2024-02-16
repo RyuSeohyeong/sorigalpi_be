@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -76,7 +77,7 @@ public class BookController {
 			value = "동화책 테이블 정보 삭제 API",
 			notes = "동화책 id로 하나 삭제") 
 	@ApiResponse(code = 200, message = "성공")
-	@PostMapping("/deleteBookById") //동화책 Id로 삭제
+	@DeleteMapping("/deleteBookById") //동화책 Id로 삭제
 	public ResponseEntity<BasicResponse> deleteBook(@RequestBody BookDTO bookDTO){
 		String result = bookService.deleteBookById(bookDTO);
 		
