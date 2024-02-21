@@ -97,11 +97,19 @@ jobs:
         run: |
           git clone https://github.com/RyuSeohyeong/sorigalpi_swagger.git
 
+      - name: Check for changes
+        id: changes
+        run: |
+          if ! diff -q swagger.json sorigalpi_swagger/swagger.json; then
+            echo "STATE_changed=true" >> $GITHUB_ENV
+          fi
+     
       - name: Copy swagger.json
         run: |
           cp swagger.json sorigalpi_swagger/
 
       - name: Commit and Push
+        if: env.STATE_changed == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.SORIGALPI_SECRET }}
         run: |
