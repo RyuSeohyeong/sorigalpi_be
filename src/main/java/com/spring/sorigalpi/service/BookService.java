@@ -23,6 +23,13 @@ public class BookService extends Base{
 		return bookRepository.findAll();
 	}
 	
+	public Book findByBookId(String bookId) { //동화책 id로 찾기
+		Book test = bookRepository.findByBookId(bookId);
+		System.out.println(test.getBookId());
+		return  test;
+		
+	}
+	
 	public String createBook(BookDTO bookDTO) { //동화책 생성
 		bookDTO.setBookId(createRandomUuId());
 		
@@ -46,5 +53,6 @@ public class BookService extends Base{
 		
 		return result;
 	}
+	
 	
 }

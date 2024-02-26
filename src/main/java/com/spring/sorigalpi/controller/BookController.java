@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.dto.BookDTO;
@@ -100,6 +101,14 @@ public class BookController {
 		return "return";
 	}
 	
+	@PostMapping("/searchBookById")
+	public Book searchOneBook(@RequestBody String bookId){ //동화책 id로 검색
+		System.out.println(bookId);
+		Book result =  bookService.findByBookId(bookId);
+		
+		return result;
+	}
+	
 	@Data
 	@Builder
 	@AllArgsConstructor
@@ -115,4 +124,6 @@ public class BookController {
 		private String resultStr;
 		
 	}
+	
+	
 }
