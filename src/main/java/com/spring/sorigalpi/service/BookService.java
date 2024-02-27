@@ -1,6 +1,7 @@
 package com.spring.sorigalpi.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,12 @@ public class BookService extends Base{
 		return bookRepository.findAll();
 	}
 	
-	public Book findByBookId(String bookId) { //동화책 id로 찾기
-		Book test = bookRepository.findByBookId(bookId);
-		System.out.println(test.getBookId());
+	public Book findByBookId(BookDTO bookDTO) { //동화책 id로 찾기
+		
+		UUID uuid = bookDTO.getBookId(); 
+
+		Book test = bookRepository.findByBookId(uuid);
+		
 		return  test;
 		
 	}

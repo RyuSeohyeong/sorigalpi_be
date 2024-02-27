@@ -3,16 +3,15 @@ package com.spring.sorigalpi.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.dto.BookDTO;
@@ -101,10 +100,13 @@ public class BookController {
 		return "return";
 	}
 	
+	@ApiOperation(
+			value = "동화책 ID로 조회 API",
+			notes = "동화책ID로 하나 조회")
 	@PostMapping("/searchBookById")
-	public Book searchOneBook(@RequestBody String bookId){ //동화책 id로 검색
-		System.out.println(bookId);
-		Book result =  bookService.findByBookId(bookId);
+	public Book searchOneBook(@RequestBody BookDTO bookDTO){ //동화책 id로 검색
+		
+		Book result =  bookService.findByBookId(bookDTO);
 		
 		return result;
 	}
