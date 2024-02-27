@@ -1,7 +1,6 @@
 package com.spring.sorigalpi.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,13 +30,15 @@ public class BookService extends Base{
 	}
 	
 	public String createBook(BookDTO bookDTO) { //동화책 생성
-		bookDTO.setBookId(createRandomUuId());
+		bookDTO.setBookId(createUUID());
 		
-		System.out.println(bookDTO.getBookId());
+		if(bookDTO.getBlind() == null) {
+			bookDTO.setBlind("NO");
+		}
 		
-		return bookRepository.save(bookDTO.toEntity()).getBookId();
+		return bookRepository.save(bookDTO.toEntity()).getBookId().toString();
 	}
-	
+	/*
 	public String deleteBookById(BookDTO bookDTO) { //동화책 ID로 삭제
 		
 		String result;
@@ -53,6 +54,6 @@ public class BookService extends Base{
 		
 		return result;
 	}
-	
+	*/
 	
 }

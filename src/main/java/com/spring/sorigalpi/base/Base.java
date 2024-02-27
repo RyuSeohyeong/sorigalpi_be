@@ -21,6 +21,10 @@ public class Base { //중복되는 메소드들
 		return resultUuid;
 	}
 	
+	public UUID createUUID() {
+		return UUID.randomUUID();
+	}
+	
 	@CreatedDate //Entity가 생성되어 저장될 때 시간 저장
 	private LocalDateTime creDate;
 	

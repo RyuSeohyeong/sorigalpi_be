@@ -1,6 +1,6 @@
 package com.spring.sorigalpi.dto;
 
-import java.sql.Date;
+import java.util.UUID;
 
 import com.spring.sorigalpi.entity.Book;
 
@@ -19,7 +19,7 @@ import lombok.Setter;
 public class BookDTO {
 
 	@ApiModelProperty(value = "책고유Id", required = true)
-	private String bookId;
+	private UUID bookId;
 	
 	@ApiModelProperty(value = "회원고유Id", required = true)
 	private String memberId;
