@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.entity.Member;
+import com.spring.sorigalpi.service.MemberLoginDto;
 import com.spring.sorigalpi.service.MemberService;
 
 import io.swagger.annotations.Api;
@@ -29,6 +31,7 @@ public class MemberController {
 
 	@Autowired
     private final MemberService memberService;
+ 
   
 	@ApiOperation(value="회원 가입", notes="회원 가입")
 	@PostMapping("/signUp")
@@ -38,10 +41,15 @@ public class MemberController {
 	}
 	
 	@ApiOperation(value="로그인", notes="로그인")
-	@GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+    public MemberLoginDto.TokenResDto login(@RequestBody MemberLoginDto memberLoginDto){
+		String email = memberLoginDto.getEmail();
+		String pwd = memberLoginDto.getPwd();
+		MemberLoginDto.TokenResDto tokenResDto = memberService.login(email, pwd);
+		
+		return tokenResDto;
+	}
+	
 	
 	@ApiOperation(value="사용자 조회", notes="사용자 조회")
 	@GetMapping("/listMembers")

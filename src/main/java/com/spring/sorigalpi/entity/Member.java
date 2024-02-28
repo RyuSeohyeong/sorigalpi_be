@@ -1,11 +1,22 @@
 package com.spring.sorigalpi.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.enumtype.MemberEnum.Role;
@@ -15,21 +26,22 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @ApiModel(value = "회원")
 @Table(name = "t_member")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Data
 @EqualsAndHashCode(callSuper = false) /*
 										 * 객체의 직접적인 서브클래스가 아니면 super class를 호출하기 때문에 별도로 구현하는 Value Object가 없을
 										 * 경우 @EqualsAndHashCode(callSuper=false) 를 선언함 - 자식 클래스의 필드를 사용하기위해
 										 */
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+
 public class Member extends Base {
 
 	@Id

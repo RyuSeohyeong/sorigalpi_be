@@ -4,43 +4,38 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.spring.sorigalpi.dto.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+	
+	private final JwtTokenProvider jwtTokenProvider;
+	
+	private final String ALL = "/**";
 
-
-    // 회원의 패스워드 암호화
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-
-        return new BCryptPasswordEncoder();
-    }
 
     // 시큐리티 필터 설정
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-            .authorizeRequests() // 요청에 대한 권한 설정
-            .antMatchers("/").authenticated()
-            .anyRequest().permitAll();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    	
+    	http
+    	.csrf().ignoringAntMatchers("/member/**");
+    	
+    	http
+    	.authorizeRequests().antMatchers("/member/**").permitAll()
+		.anyRequest().authenticated();
 
-        httpSecurity
-            .formLogin() // Form Login 설정
-                .loginPage("/member/login")
-                .loginProcessingUrl("/api/login")
-                .defaultSuccessUrl("/")
-            .and()
-                .logout()
-            .and()
-                .csrf().disable();
-
-        return httpSecurity.build();
+    	return http.build();
 
     }
 }
