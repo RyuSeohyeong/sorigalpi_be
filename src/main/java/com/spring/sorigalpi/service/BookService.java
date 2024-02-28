@@ -2,6 +2,7 @@ package com.spring.sorigalpi.service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,17 @@ public class BookService extends Base{
 		Book test = bookRepository.findByBookId(uuid);
 		
 		return  test;
+		
+	}
+	
+	public List<BookDTO> findByBookName(String bookName){
+		
+		List<Book> bookList = bookRepository.findAllBybookName(bookName);
+		
+		List<BookDTO> bookDTOList = bookList.stream().map(Book::toDTO).collect(Collectors.toList()); //List<Book> -> List<BookDTO>
+		
+		return bookDTOList; 
+		
 		
 	}
 	

@@ -6,6 +6,7 @@ import com.spring.sorigalpi.entity.Book;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class BookDTO {
 
 	@ApiModelProperty(value = "책고유Id", required = true)
@@ -47,7 +49,8 @@ public class BookDTO {
 	
 	@ApiModelProperty(value = "동화책설명", example = "동화책내용 들어감", required = true)
 	private String info;
-
+	
+	
 	public Book toEntity() {
 		return Book.builder()
 				.bookId(bookId)

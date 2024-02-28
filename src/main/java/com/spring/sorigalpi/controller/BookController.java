@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -109,6 +110,25 @@ public class BookController {
 		Book result =  bookService.findByBookId(bookDTO);
 		
 		return result;
+	}
+	
+	@ApiOperation(
+			value = "동화책 제목으로 조회 API",
+			notes = "제목으로 모든 동화정보 리스트로 조회")
+	@GetMapping("/searchByBookName/{bookName}")
+	public ResponseEntity<BasicResponse> searchByBookName(@PathVariable String bookName) {
+		
+		List<BookDTO> bookList = bookService.findByBookName(bookName);
+		
+		BasicResponse basicResponse =  BasicResponse.builder()
+				.code(HttpStatus.OK.value())
+				.httpStatus(HttpStatus.OK)
+				.message("책 제목으로 조회 성공")
+				.result(new ArrayList<>(bookList))
+				.count(bookList.size()).build();
+
+		return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+		
 	}
 	
 	@Data
