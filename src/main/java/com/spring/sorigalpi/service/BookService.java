@@ -20,8 +20,13 @@ public class BookService extends Base{
 	@Autowired
 	private BookRepository bookRepository;
 
-	public List<Book> getAllBook(){ //동화책 테이블 모든 정보 가져오기
-		return bookRepository.findAll();
+	public List<BookDTO> getAllBook(){ //동화책 테이블 모든 정보 가져오기
+		
+		List<Book> bookList = bookRepository.findAll();
+		
+		List<BookDTO> bookDTOList = bookList.stream().map(Book::toDTO).collect(Collectors.toList()); //List<Book> -> List<BookDTO>
+		
+		return bookDTOList;
 	}
 	
 	public Book findByBookId(BookDTO bookDTO) { //동화책 id로 찾기

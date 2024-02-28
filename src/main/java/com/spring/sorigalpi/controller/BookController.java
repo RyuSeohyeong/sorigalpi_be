@@ -44,7 +44,7 @@ public class BookController {
 	@GetMapping("/getAllBook") //동화책 테이블의 모든 정보 가져오기
 	public ResponseEntity<BasicResponse> allBookList(){
 			 
-		List<Book> bookList = bookService.getAllBook();
+		List<BookDTO> bookList = bookService.getAllBook();
 		
 		BasicResponse basicResponse =  BasicResponse.builder()
 												.code(HttpStatus.OK.value())
@@ -116,7 +116,7 @@ public class BookController {
 			value = "동화책 제목으로 조회 API",
 			notes = "제목으로 모든 동화정보 리스트로 조회")
 	@GetMapping("/searchByBookName/{bookName}")
-	public ResponseEntity<BasicResponse> searchByBookName(@PathVariable String bookName) {
+	public ResponseEntity<BasicResponse> searchByBookName(@PathVariable String bookName) { //동화책 제목으로 검색
 		
 		List<BookDTO> bookList = bookService.findByBookName(bookName);
 		
