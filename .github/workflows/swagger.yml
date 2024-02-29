@@ -8,6 +8,7 @@ on:
       - book
       - member
       - springSecurityAndJwt
+      - authentication
       
 permissions:
   contents: write

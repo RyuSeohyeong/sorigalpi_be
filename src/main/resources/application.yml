@@ -6,6 +6,11 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+ 
+  error:
+    include-stacktrace: always
+    include-message: always
+
 
 spring:
   
@@ -16,6 +21,15 @@ spring:
     username: root
     password: 1234
     #password: 0930
+    
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gmail@gmail.com
+    password: abcd efgh ijkl mnop
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
    
    # 스웨거 스프링부트 버전2.6이후 생기는 오류를 해결해주는 설정    
   mvc:
