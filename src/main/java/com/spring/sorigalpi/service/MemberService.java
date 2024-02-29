@@ -1,8 +1,8 @@
 package com.spring.sorigalpi.service;
 
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -11,24 +11,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.sorigalpi.base.Base;
-import com.spring.sorigalpi.dto.JwtTokenProvider;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Role;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 import com.spring.sorigalpi.repository.MemberRepository;
-import com.spring.sorigalpi.service.MemberLoginDto.TokenResDto;
-
-import lombok.RequiredArgsConstructor;
+import com.spring.sorigalpi.security.JwtToken;
+import com.spring.sorigalpi.security.JwtTokenProvider;
 
 @Service
-@RequiredArgsConstructor
 public class MemberService extends Base {
 
-   @Autowired
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final BCryptPasswordEncoder encoder;
+    
+    public MemberService (BCryptPasswordEncoder encoder, MemberRepository memberRepository, 
+    		AuthenticationManagerBuilder authenticationManagerBuilder, JwtTokenProvider jwtTokenProvider) {
+    	this.encoder = encoder;
+    	this.memberRepository = memberRepository;
+    	this.authenticationManagerBuilder = authenticationManagerBuilder;
+    	this.jwtTokenProvider = jwtTokenProvider;
+    }
     
     @Transactional
     public String createMember(MemberDto memberDto) { // 사용자 추가 메소드
@@ -65,16 +70,16 @@ public class MemberService extends Base {
     }
     
     @Transactional
-    public TokenResDto login(String email, String pwd) {
+    public JwtToken login(String email, String pwd) {
     	//Authentication 객체 생성
     	UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, pwd);
     	Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
     	
     	//검증된 인증 정보로 JWT 토큰 생성
-    	TokenResDto token = jwtTokenProvider.generateToken(authentication);
+    	JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
     	
-    	return token;
+    	return jwtToken;
     	
     }
-    	} 
+}
 

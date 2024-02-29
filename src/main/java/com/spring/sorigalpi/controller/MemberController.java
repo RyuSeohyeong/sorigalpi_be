@@ -1,8 +1,12 @@
 package com.spring.sorigalpi.controller;
 
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.transaction.Transactional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,26 +15,30 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.dto.MemberDto;
+import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
-import com.spring.sorigalpi.service.MemberLoginDto;
+import com.spring.sorigalpi.security.JwtToken;
 import com.spring.sorigalpi.service.MemberService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.RequiredArgsConstructor;
+
 @Api(tags="member")
 @RestController("memberController")
 @RequestMapping(value = "/member")
-@RequiredArgsConstructor
 
 public class MemberController {
-
-	@Autowired
+	
     private final MemberService memberService;
+    
+    public MemberController(MemberService memberService) {
+    	this.memberService = memberService;
+    }
  
   
 	@ApiOperation(value="회원 가입", notes="회원 가입")
@@ -41,14 +49,13 @@ public class MemberController {
 	}
 	
 	@ApiOperation(value="로그인", notes="로그인")
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-    public MemberLoginDto.TokenResDto login(@RequestBody MemberLoginDto memberLoginDto){
-		String email = memberLoginDto.getEmail();
-		String pwd = memberLoginDto.getPwd();
-		MemberLoginDto.TokenResDto tokenResDto = memberService.login(email, pwd);
-		
-		return tokenResDto;
-	}
+	@PostMapping(value = "/login")
+	public JwtToken login(@RequestBody MemberLoginDto memberLoginDto) {
+        String email = memberLoginDto.getEmail();
+        String pwd = memberLoginDto.getPwd();
+        JwtToken jwtToken = memberService.login(email, pwd);
+        return jwtToken;
+    }
 	
 	
 	@ApiOperation(value="사용자 조회", notes="사용자 조회")

@@ -1,4 +1,4 @@
-package com.spring.sorigalpi.dto;
+package com.spring.sorigalpi.security;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +15,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import com.spring.sorigalpi.service.MemberLoginDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -47,7 +44,7 @@ public class JwtTokenProvider {
 		this.key = Keys.hmacShaKeyFor(keyBytes);
 	}
 	
-	public MemberLoginDto.TokenResDto generateToken(Authentication authentication) {
+	public JwtToken generateToken(Authentication authentication) {
 		
 		String authorities = authentication.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
@@ -68,11 +65,10 @@ public class JwtTokenProvider {
 				.signWith(key, SignatureAlgorithm.HS256)
 				.compact();
 		
-		return MemberLoginDto.TokenResDto.builder()
+		return JwtToken.builder()
 				.grantType(BEARER_TYPE)
 				.accessToken(accessToken)
 				.refreshToken(refreshToken)
-				.refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
 				.build();
 	}
 	
@@ -80,7 +76,7 @@ public class JwtTokenProvider {
 		//토큰 복호화
 		Claims claims = parseClaims(accessToken);
 		
-		if(claims.get(AUTHORITIES_KEY)==null) {
+		if(claims.get(AUTHORITIES_KEY) == null) {
 			throw new RuntimeException("권한 정보가 없는 토큰입니다.");
 		}
 		
@@ -116,14 +112,6 @@ public class JwtTokenProvider {
 		} catch (ExpiredJwtException e) {
 			return e.getClaims();
 		}
-	}
-	
-	public Long getExpiration(String accessToken) {
-		
-	Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
-	
-	Long now = new Date().getTime();
-	return (expiration.getTime() - now);
 	}
 
 }
