@@ -3,16 +3,21 @@ package com.spring.sorigalpi.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.sorigalpi.base.Base;
+import com.spring.sorigalpi.dto.JwtTokenProvider;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Role;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 import com.spring.sorigalpi.repository.MemberRepository;
+import com.spring.sorigalpi.service.MemberLoginDto.TokenResDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +26,9 @@ import lombok.RequiredArgsConstructor;
 public class MemberService extends Base {
 
    @Autowired
-	private final BCryptPasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
     
     @Transactional
     public String createMember(MemberDto memberDto) { // 사용자 추가 메소드
@@ -58,19 +64,17 @@ public class MemberService extends Base {
     	return "탈퇴가 완료되었습니다.";
     }
     
-    
-    public String login(MemberDto memberDto) { // 로그인 메소드
-        String email = memberDto.getEmail();
-        String rawPassword = memberDto.getPwd();
-
-        Member byEmail = memberRepository.findByEmail(email);
-
-        // 비밀번호 일치 여부 확인
-        if(passwordEncoder.matches(rawPassword, byEmail.getPwd())){
-            return "로그인했습니다.";
-        }
-
-        return "로그인에 실패하였습니다.";
+    @Transactional
+    public TokenResDto login(String email, String pwd) {
+    	//Authentication 객체 생성
+    	UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, pwd);
+    	Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+    	
+    	//검증된 인증 정보로 JWT 토큰 생성
+    	TokenResDto token = jwtTokenProvider.generateToken(authentication);
+    	
+    	return token;
+    	
     }
     	} 
 
