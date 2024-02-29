@@ -34,8 +34,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "t_member")
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @EqualsAndHashCode(callSuper = false) /*
 										 * 객체의 직접적인 서브클래스가 아니면 super class를 호출하기 때문에 별도로 구현하는 Value Object가 없을
@@ -90,6 +88,5 @@ public class Member extends Base {
 		this.nickName = nickName;
 		this.profileImg = profileImg;
 		this.intro = intro;
-	}
-
+	}	
 }
