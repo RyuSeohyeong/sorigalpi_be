@@ -49,6 +49,13 @@ dependencies {
 	//SMTP
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	
+	implementation 'javax.mail:mail:1.4.7'
+	// Spring Context Support
+	implementation 'org.springframework:spring-context-support:5.3.9'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('bootBuildImage') {

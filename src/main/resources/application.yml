@@ -13,23 +13,18 @@ server:
 
 
 spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
   
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sorigalpi?serverTimezone=Asia/Seoul
+   driver-class-name: com.mysql.cj.jdbc.Driver
+   url: jdbc:mysql://localhost:3306/sorigalpi?serverTimezone=Asia/Seoul
     #url: jdbc:mysql://localhost:3306/test2?serverTimezone=Asia/Seoul
-    username: root
-    password: 1234
+   username: root
+   password: 1234
     #password: 0930
-    
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: gmail@gmail.com
-    password: abcd efgh ijkl mnop
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
    
    # 스웨거 스프링부트 버전2.6이후 생기는 오류를 해결해주는 설정    
   mvc:
@@ -43,6 +38,7 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
     open-in-view: true
+    
 
 #Jwt Secret Key
 jwt:
