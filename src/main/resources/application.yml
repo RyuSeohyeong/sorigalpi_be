@@ -20,9 +20,6 @@ spring:
    username: root
    password: 1234
     #password: 0930
-  redis:
-    host: localhost
-    port: 6379
    
    # 스웨거 스프링부트 버전2.6이후 생기는 오류를 해결해주는 설정    
   mvc:
