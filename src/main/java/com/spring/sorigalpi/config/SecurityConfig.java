@@ -33,10 +33,11 @@ public class SecurityConfig {
     	.httpBasic().disable();
     	
     	http
-    	.csrf().ignoringAntMatchers("/member/**");
+    	.csrf().ignoringAntMatchers("/**");
+    		
     	
     	http
-    	.authorizeRequests().antMatchers("/member/**").permitAll()
+    	.authorizeRequests().antMatchers("/**").permitAll()
 		.anyRequest().authenticated();
     	
     	http

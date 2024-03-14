@@ -1,22 +1,12 @@
 package com.spring.sorigalpi.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.enumtype.MemberEnum.Role;
@@ -24,15 +14,15 @@ import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @ApiModel(value = "회원")
 @Table(name = "t_member")
 @Getter
+@Setter
 @Builder
 @Entity
 @EqualsAndHashCode(callSuper = false) /*
@@ -76,6 +66,7 @@ public class Member extends Base {
 	@Column(name = "status")
 	@Enumerated(value = EnumType.STRING)
 	private Status status;
+	
 
 	public void updateMember(String email, String pwd, String nickName, String profileImg,
 			String intro) { /*
@@ -89,4 +80,5 @@ public class Member extends Base {
 		this.profileImg = profileImg;
 		this.intro = intro;
 	}	
+
 }
