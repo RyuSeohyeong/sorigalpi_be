@@ -2,44 +2,40 @@ package com.spring.sorigalpi.service;
 
 
 import java.util.List;
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.MemberDto;
+import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Role;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 import com.spring.sorigalpi.repository.MemberRepository;
-import com.spring.sorigalpi.security.JwtToken;
-import com.spring.sorigalpi.security.JwtTokenProvider;
+import com.spring.sorigalpi.token.JwtProvider;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService extends Base {
 
     private final MemberRepository memberRepository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final BCryptPasswordEncoder encoder;
-    
-    public MemberService (BCryptPasswordEncoder encoder, MemberRepository memberRepository, 
-    		AuthenticationManagerBuilder authenticationManagerBuilder, JwtTokenProvider jwtTokenProvider) {
-    	this.encoder = encoder;
-    	this.memberRepository = memberRepository;
-    	this.authenticationManagerBuilder = authenticationManagerBuilder;
-    	this.jwtTokenProvider = jwtTokenProvider;
-    }
+    private final BCryptPasswordEncoder pwdEncoder;
+    private final JwtProvider jwtProvider;
     
     @Transactional
     public String createMember(MemberDto memberDto) { // 사용자 추가 메소드
+    
+    	//memberDto에서 pwd값을 가져와 BCryptPasswordEncoder로 회원의 비밀번호를 암호화한다.
+    	String encodedPassword = pwdEncoder.encode(memberDto.getPwd());
+
+    	memberDto.setPwd(encodedPassword);
     	memberDto.setRole(Role.ROLE_USER);
     	memberDto.setStatus(Status.ACTIVE);
     	memberDto.setMemberId(createRandomUuId());;
+   
     	return memberRepository.save(memberDto.toEntity()).getNickName() + "님 환영합니다.";
     }
     
@@ -68,18 +64,24 @@ public class MemberService extends Base {
     	memberRepository.deleteById(memberId);
     	return "탈퇴가 완료되었습니다.";
     }
-    
-    @Transactional
-    public JwtToken login(String email, String pwd) {
-    	//Authentication 객체 생성
-    	UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, pwd);
-    	Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-    	
-    	//검증된 인증 정보로 JWT 토큰 생성
-    	JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
-    	
-    	return jwtToken;
-    	
-    }
+
+	public String login(MemberLoginDto memberLoginDto) {
+		
+		String email = memberLoginDto.getEmail();
+		String loginPwd = memberLoginDto.getPwd();
+		
+		Member loginEmail = memberRepository.findByEmail(email);
+		
+		if(pwdEncoder.matches(loginPwd, loginEmail.getPwd())) {
+			
+			//JWT Token 반환
+			String jwtToken = jwtProvider.generateJwtToken(loginEmail.getMemberId(), loginEmail.getEmail(), loginEmail.getNickName(),
+					loginEmail.getProfileImg(), loginEmail.getIntro());
+			
+			return "로그인 되었습니다.";
+		}
+		
+			return "로그인에 실패하였습니다.";
+	}
 }
 
