@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 public class SecurityConfig {
 	
-	//JwtProvide에 memeberRepositor 의존성 부여
 	@Bean
 	public JwtProvider jwtTokenProvider() {
 		return new JwtProvider();
