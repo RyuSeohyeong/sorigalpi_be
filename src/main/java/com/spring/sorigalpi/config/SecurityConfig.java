@@ -19,12 +19,10 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 public class SecurityConfig {
 	
-	private final MemberRepository memberRepository;
-	
 	//JwtProvide에 memeberRepositor 의존성 부여
 	@Bean
 	public JwtProvider jwtTokenProvider() {
-		return new JwtProvider(memberRepository);
+		return new JwtProvider();
 	}
 	
     // 회원의 비밀번호 암호화

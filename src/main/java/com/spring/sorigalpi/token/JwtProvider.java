@@ -11,15 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.spring.sorigalpi.entity.Member;
-import com.spring.sorigalpi.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JwtProvider {
-
-    private final MemberRepository memberRepository;
 
     static Long EXPIRE_TIME = 60L * 60L * 1000L; // 토큰 만료 시간 (1시간)
     
@@ -38,8 +34,7 @@ public class JwtProvider {
 
 
     // Jwt Token 생성
-    public String generateJwtToken(String memberId, String email, String nickName,
-    		String profileImg, String intro){
+    public String generateJwtToken(String memberId, String email){
 
         Date tokenExpiration = new Date(System.currentTimeMillis() + (EXPIRE_TIME));
 
@@ -48,20 +43,15 @@ public class JwtProvider {
                 .withSubject(email)
                 .withExpiresAt(tokenExpiration)
                 .withClaim("memberId", memberId)
-                .withClaim("email", email)
-                .withClaim("nickName", nickName)
-                .withClaim("profileImg", profileImg)
-                .withClaim("intro", intro)
                 .sign(this.getSign());
 
         return jwtToken;
     }
 
-    /* 토큰 검증하기
-    - 토큰에서 가져온 email 정보와 DB의 회원 정보와 일치하는지 확인한다.
-    - 토큰 만료 시간이 지났는지 확인한다. 
-    */
-    public Member validToken(String jwtToken){
+    // 토큰 검증하기
+    // 토큰에서 가져온 email 정보와 DB의 회원 정보와 일치하는지 확인한다.
+    // 토큰 만료 시간이 지났는지 확인한다. 
+    public String validToken(String jwtToken){
         try {
 
             String email = JWT.require(this.getSign())
@@ -75,13 +65,13 @@ public class JwtProvider {
             // 토큰의 만료 시간이 지나지 않았는지 확인한다.
             Date expiresAt = JWT.require(this.getSign()).acceptExpiresAt(EXPIRE_TIME).build().verify(jwtToken).getExpiresAt();
             if (!this.validExpiredTime(expiresAt)) {
-                // 만료시간이 지나면 null값 반환
+                // 만료시간이 지나면 만료시간 지남에 대한 예외 반환
                 return null;
             }
 
-            Member tokenMember = memberRepository.findByEmail(email);
+            // 만료시간이 지나지않았을 때 (토큰이 유효할 때)
+            	return "사용자의 토큰이 유효합니다.";
 
-            return tokenMember;
 
         } catch (Exception e){
             e.printStackTrace();
@@ -89,7 +79,7 @@ public class JwtProvider {
         }
 
     }
-
+    
     // 토큰의 만료 시간을 검증한다.
     private boolean validExpiredTime(Date expired) {
     	

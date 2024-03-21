@@ -74,11 +74,10 @@ public class MemberService extends Base {
 		
 		if(pwdEncoder.matches(loginPwd, loginEmail.getPwd())) {
 			
-			//JWT Token 반환
-			String jwtToken = jwtProvider.generateJwtToken(loginEmail.getMemberId(), loginEmail.getEmail(), loginEmail.getNickName(),
-					loginEmail.getProfileImg(), loginEmail.getIntro());
+			// 회원이 로그인한 이메일로 회원을 찾은 후에 비밀번호를 비교하고, 로그인할 때 사용한 비밀번호가 일치하는 경우 JWT 토큰을 생성하여 반환
+			String jwtToken = jwtProvider.generateJwtToken(loginEmail.getMemberId(), loginEmail.getEmail());
 			
-			return "로그인 되었습니다.";
+			return "로그인 되었습니다." +jwtToken;
 		}
 		
 			return "로그인에 실패하였습니다.";
