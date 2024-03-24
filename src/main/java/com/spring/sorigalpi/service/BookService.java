@@ -33,13 +33,13 @@ public class BookService extends Base{
 		
 		UUID uuid = bookDTO.getBookId(); 
 
-		Book test = bookRepository.findByBookId(uuid);
+		Book bookInfo = bookRepository.findByBookId(uuid);
 		
-		return  test;
+		return  bookInfo;
 		
 	}
 	
-	public List<BookDTO> findByBookName(String bookName){
+	public List<BookDTO> findByBookName(String bookName){ //동화책 이름으로 찾기
 		
 		List<Book> bookList = bookRepository.findAllBybookName(bookName);
 		
@@ -59,22 +59,15 @@ public class BookService extends Base{
 		
 		return bookRepository.save(bookDTO.toEntity()).getBookId().toString();
 	}
-	/*
-	public String deleteBookById(BookDTO bookDTO) { //동화책 ID로 삭제
+	
+	public void deleteBookById(BookDTO bookDTO) { //동화책 ID로 삭제
 		
 		String result;
-		String bookId = bookDTO.getBookId();
+		UUID bookId = bookDTO.getBookId();
+		Book bookInfo = bookRepository.findByBookId(bookId);
+		bookRepository.delete(bookInfo);
 		
-		try {
-			bookRepository.deleteById(bookId);
-			result = "삭제 성공";
-		} catch (Exception e) {
-			e.printStackTrace();
-			result = "삭제 실패 해당 동화책이 존재하지 않습니다.";
-		}
-		
-		return result;
 	}
-	*/
 	
+
 }

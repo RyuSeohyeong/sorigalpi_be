@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,14 +75,22 @@ public class BookController {
 		return new ResponseEntity<>(basicResponse, HttpStatus.OK);
 	}
 	
-	/*
+	
 	@ApiOperation(
 			value = "동화책 테이블 정보 삭제 API",
 			notes = "동화책 id로 하나 삭제") 
 	@ApiResponse(code = 200, message = "성공")
 	@DeleteMapping("/deleteBookById") //동화책 Id로 삭제
 	public ResponseEntity<BasicResponse> deleteBook(@RequestBody BookDTO bookDTO){
-		String result = bookService.deleteBookById(bookDTO);
+		String result;	
+			try {
+				bookService.deleteBookById(bookDTO);
+				result="삭제성공";
+			}catch (Exception e) {
+				e.printStackTrace();
+				result="삭제실패";
+			}
+			
 		
 			BasicResponse basicResponse =  BasicResponse.builder()
 					.code(HttpStatus.OK.value())
@@ -92,7 +101,7 @@ public class BookController {
 		
 		return new ResponseEntity<>(basicResponse, HttpStatus.OK);
 	}
-	*/
+	
 	@ApiOperation(
 			value = "동화책 테이블 정보 수정 API",
 			notes = "동화책 수정") 
