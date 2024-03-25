@@ -31,9 +31,9 @@ public class BookService extends Base{
 	
 	public Book findByBookId(BookDTO bookDTO) { //동화책 id로 찾기
 		
-		UUID uuid = bookDTO.getBookId(); 
+		UUID bookId = bookDTO.getBookId(); 
 
-		Book bookInfo = bookRepository.findByBookId(uuid);
+		Book bookInfo = bookRepository.findByBookId(bookId);
 		
 		return  bookInfo;
 		
@@ -67,6 +67,14 @@ public class BookService extends Base{
 		Book bookInfo = bookRepository.findByBookId(bookId);
 		bookRepository.delete(bookInfo);
 		
+	}
+	
+	public void updateBook(BookDTO bookDTO) {
+		Book bookInfo = bookRepository.findByBookId(bookDTO.getBookId());
+		System.out.println(bookInfo.getCreDate());
+		
+		
+		bookRepository.save(bookDTO.toEntity());
 	}
 	
 

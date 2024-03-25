@@ -140,6 +140,11 @@ public class BookController {
 		
 	}
 	
+	@PutMapping
+	public void updateBook(@RequestBody BookDTO bookDTO){//동화 수정
+		bookService.updateBook(bookDTO);
+	}
+	
 	@Data
 	@Builder
 	@AllArgsConstructor

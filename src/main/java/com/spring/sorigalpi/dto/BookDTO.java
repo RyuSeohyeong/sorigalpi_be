@@ -1,5 +1,6 @@
 package com.spring.sorigalpi.dto;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.spring.sorigalpi.entity.Book;
@@ -36,8 +37,8 @@ public class BookDTO {
 	//@Enumerated(EnumType.STRING)
 	private String status;
 	
-	//@ApiModelProperty(value = "만든날짜", example = "2024-01-01", required = true)
-	//private Date creDate;
+	@ApiModelProperty(value = "만든날짜", example = "2024-01-01", required = true)
+	private LocalDateTime creDate;
 	
 	@ApiModelProperty(value = "동화책 신고상태", example = "YES, NO", required = true)
 	//@Enumerated(EnumType.STRING)
@@ -58,6 +59,7 @@ public class BookDTO {
 				.bookName(bookName)
 				.pageNum(pageNum)
 				.status(status)
+				.creDate(creDate)
 				.blind(blind)
 				.recordable(recordable)
 				.info(info)
