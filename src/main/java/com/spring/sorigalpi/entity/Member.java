@@ -14,23 +14,15 @@ import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @ApiModel(value = "회원")
 @Table(name = "t_member")
 @Getter
-@Setter
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@Entity
 @EqualsAndHashCode(callSuper = false) /*
 										 * 객체의 직접적인 서브클래스가 아니면 super class를 호출하기 때문에 별도로 구현하는 Value Object가 없을
 										 * 경우 @EqualsAndHashCode(callSuper=false) 를 선언함 - 자식 클래스의 필드를 사용하기위해
@@ -85,6 +77,8 @@ public class Member extends Base {
 		this.nickName = nickName;
 		this.profileImg = profileImg;
 		this.intro = intro;
-	}	
+	}
+	
+	
 
 }
