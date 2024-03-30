@@ -12,6 +12,8 @@ import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Role;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
+import com.spring.sorigalpi.exception.CustomException;
+import com.spring.sorigalpi.exception.ErrorCode;
 import com.spring.sorigalpi.repository.MemberRepository;
 import com.spring.sorigalpi.token.JwtProvider;
 
@@ -42,6 +44,7 @@ public class MemberService extends Base {
     public List<Member> listMembers(){ // 사용자 조회 메소드
     	return memberRepository.findAll();
     }
+    
     @Transactional
     public String updateMember(String memberId, MemberDto memberDto) { // 사용자 정보 변경 메소드
     	//findById 메소드를 통해 값을 가져오면서 해당 값은 영속성을 가진다.
@@ -82,5 +85,12 @@ public class MemberService extends Base {
 		
 			return "로그인에 실패하였습니다.";
 	}
+	
+    public Member findMember(String email){ // 사용자 찾기 메소드
+    	return memberRepository.findById(email).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+		
+    	
+    }
+	
 }
 

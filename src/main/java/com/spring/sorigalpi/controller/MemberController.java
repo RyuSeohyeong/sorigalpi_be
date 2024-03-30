@@ -65,4 +65,9 @@ public class MemberController {
 			@PathVariable String memberId) {
 		return memberService.deleteMember(memberId);
 	}
+	
+	@GetMapping("/{email}")
+	public Member findMember (@PathVariable String email){
+		return memberService.findMember(email);
+	}
 }
