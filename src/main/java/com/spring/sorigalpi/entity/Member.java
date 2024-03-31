@@ -14,14 +14,18 @@ import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @ApiModel(value = "회원")
 @Table(name = "t_member")
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @EqualsAndHashCode(callSuper = false) /*
 										 * 객체의 직접적인 서브클래스가 아니면 super class를 호출하기 때문에 별도로 구현하는 Value Object가 없을
@@ -29,6 +33,8 @@ import lombok.Getter;
 										 */
 
 public class Member extends Base {
+	
+
 
 	@Id
 	@ApiModelProperty(value = "사용자 고유 아이디", required = true)

@@ -37,8 +37,11 @@ public class MemberService extends Base {
     	memberDto.setRole(Role.ROLE_USER);
     	memberDto.setStatus(Status.ACTIVE);
     	memberDto.setMemberId(createRandomUuId());;
+    
+    	Member member = memberDto.toEntity();
+    	 memberRepository.save(member);
    
-    	return memberRepository.save(memberDto.toEntity()).getNickName() + "님 환영합니다.";
+    	return "가입되었습니다.";
     }
     
     public List<Member> listMembers(){ // 사용자 조회 메소드
@@ -86,11 +89,13 @@ public class MemberService extends Base {
 			return "로그인에 실패하였습니다.";
 	}
 	
-    public Member findMember(String email){ // 사용자 찾기 메소드
-    	return memberRepository.findById(email).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-		
-    	
-    }
+	public Member findMember(String email) { 
+	    Member member = memberRepository.findByEmail(email);
+	    if (member == null) {
+	        throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+	    }
+	    return member;
+	}
 	
 }
 
