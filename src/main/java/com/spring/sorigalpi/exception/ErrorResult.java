@@ -1,4 +1,4 @@
-package com.spring.sorigalpi.base;
+package com.spring.sorigalpi.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
