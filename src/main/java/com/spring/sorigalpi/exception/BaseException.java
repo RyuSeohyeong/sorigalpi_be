@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 
-public class CustomException extends RuntimeException {
+public class BaseException extends RuntimeException {
 	
     private static final long serialVersionUID = 1L;
     
