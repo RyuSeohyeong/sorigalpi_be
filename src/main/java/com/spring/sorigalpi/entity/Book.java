@@ -1,17 +1,18 @@
 package com.spring.sorigalpi.entity;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
-
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.spring.sorigalpi.dto.BookDTO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,7 +35,8 @@ import lombok.NoArgsConstructor;
 public class Book {
 	@Id
 	@ApiModelProperty(value = "책고유Id", required = true)
-	private String bookId;
+	@Type(type="uuid-char")
+	private UUID bookId;
 	
 	@ApiModelProperty(value = "회원고유Id", required = true)
 	private String memberId;
@@ -64,5 +66,17 @@ public class Book {
 	@ApiModelProperty(value = "동화책설명", example = "동화책내용 들어감", required = true)
 	private String info;
 	
-	
+	public BookDTO toDTO() {
+		return BookDTO.builder()
+				.bookId(bookId)
+				.memberId(memberId)
+				.bookName(bookName)
+				.pageNum(pageNum)
+				.status(status)
+				.blind(blind)
+				.recordable(recordable)
+				.info(info)
+				.build();
+				
+	}
 }

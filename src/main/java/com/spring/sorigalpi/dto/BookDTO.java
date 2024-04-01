@@ -1,11 +1,13 @@
 package com.spring.sorigalpi.dto;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.spring.sorigalpi.entity.Book;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +18,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class BookDTO {
 
 	@ApiModelProperty(value = "책고유Id", required = true)
-	private String bookId;
+	private UUID bookId;
 	
 	@ApiModelProperty(value = "회원고유Id", required = true)
 	private String memberId;
@@ -34,8 +37,8 @@ public class BookDTO {
 	//@Enumerated(EnumType.STRING)
 	private String status;
 	
-	//@ApiModelProperty(value = "만든날짜", example = "2024-01-01", required = true)
-	//private Date creDate;
+	@ApiModelProperty(value = "만든날짜", example = "2024-01-01", required = true)
+	private LocalDateTime creDate;
 	
 	@ApiModelProperty(value = "동화책 신고상태", example = "YES, NO", required = true)
 	//@Enumerated(EnumType.STRING)
@@ -47,7 +50,8 @@ public class BookDTO {
 	
 	@ApiModelProperty(value = "동화책설명", example = "동화책내용 들어감", required = true)
 	private String info;
-
+	
+	
 	public Book toEntity() {
 		return Book.builder()
 				.bookId(bookId)
@@ -55,6 +59,7 @@ public class BookDTO {
 				.bookName(bookName)
 				.pageNum(pageNum)
 				.status(status)
+				.creDate(creDate)
 				.blind(blind)
 				.recordable(recordable)
 				.info(info)

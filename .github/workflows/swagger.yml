@@ -118,5 +118,5 @@ jobs:
           cd sorigalpi_swagger
           git remote add sorigalpi_swagger https://${GITHUB_TOKEN}@github.com/RyuSeohyeong/sorigalpi_swagger.git
           git add swagger.json
-          git commit -m "Update Swagger"
+          git commit -m "Refactor book branche Update Swagger"
           git push -f sorigalpi_swagger main
