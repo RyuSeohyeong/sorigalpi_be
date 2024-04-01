@@ -7,23 +7,29 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.spring.sorigalpi.security.JwtAuthenticationFilter;
-import com.spring.sorigalpi.security.JwtTokenProvider;
+import com.spring.sorigalpi.repository.MemberRepository;
+import com.spring.sorigalpi.token.JwtProvider;
+
+import lombok.RequiredArgsConstructor;
 
 
-
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 	
-	private final JwtTokenProvider jwtTokenProvider;
-	
-	public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
-		this.jwtTokenProvider = jwtTokenProvider;
+	@Bean
+	public JwtProvider jwtTokenProvider() {
+		return new JwtProvider();
 	}
-
+	
+    // 회원의 비밀번호 암호화
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
 
     // 시큐리티 필터 설정
     @Bean
@@ -42,19 +48,9 @@ public class SecurityConfig {
     	
     	http
         .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-    	http
-        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-    	
-    	
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);    	
 
     	return http.build();
 
     }
-    
-	@Bean
-	public BCryptPasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
-	}
 }

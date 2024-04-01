@@ -5,13 +5,14 @@ import com.spring.sorigalpi.enumtype.MemberEnum.Role;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 public class MemberDto {
 	
@@ -26,10 +27,7 @@ public class MemberDto {
 	
 	@ApiModelProperty(value = "닉네임", example = "닉네임", required = true)
 	private String nickName;
-	
-	@ApiModelProperty(value = "핸드폰 번호", example = "핸드폰 번호", required = true)
-	private String phone;
-	
+		
 	@ApiModelProperty(value = "프로필 사진", example = "image.jpg", required = false)
 	private String profileImg;
 	
@@ -41,21 +39,6 @@ public class MemberDto {
 	
 	@ApiModelProperty(value = "활동 상태", example = "ACTIVE, QUIT", required = true)
 	private Status status;
-
-	@Builder
-	public MemberDto(String memberId, String email, String pwd, String nickName, String profileImg, String intro,
-			Role role, Status status, String  phone) {
-
-		this.memberId = memberId;
-		this.email = email;
-		this.pwd = pwd;
-		this.nickName = nickName;
-		this.profileImg = profileImg;
-		this.intro = intro;
-		this.role = role;
-		this.status = status;
-		this.phone = phone;
-	}
 
 	// Entity 클래스인 Member에 객체를 주입하여 Entity 클래스를 반환하는 메소드
 	public Member toEntity() {

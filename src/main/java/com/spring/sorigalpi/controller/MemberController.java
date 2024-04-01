@@ -9,32 +9,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
-import com.spring.sorigalpi.security.JwtToken;
 import com.spring.sorigalpi.service.MemberService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 
 @Api(tags="member")
 @RestController("memberController")
 @RequestMapping(value = "/member")
+@RequiredArgsConstructor
 
 public class MemberController {
 	
     private final MemberService memberService;
     
-    public MemberController(MemberService memberService) {
-    	this.memberService = memberService;
-    }
- 
   
 	@ApiOperation(value="회원 가입", notes="회원 가입")
 	@PostMapping("/signUp")
@@ -44,12 +39,10 @@ public class MemberController {
 	}
 	
 	@ApiOperation(value="로그인", notes="로그인")
-	@PostMapping(value = "/login")
-	public JwtToken login(@RequestBody MemberLoginDto memberLoginDto) {
-        String email = memberLoginDto.getEmail();
-        String pwd = memberLoginDto.getPwd();
-        JwtToken jwtToken = memberService.login(email, pwd);
-        return jwtToken;
+	@PostMapping("/login")
+	public String login(@RequestBody MemberLoginDto memberLoginDto) {
+		
+		return memberService.login(memberLoginDto);
     }
 	
 	
@@ -71,5 +64,10 @@ public class MemberController {
 			@ApiParam(name = "memberId", value = "사용자 고유 아이디", required = true)
 			@PathVariable String memberId) {
 		return memberService.deleteMember(memberId);
+	}
+	
+	@GetMapping("/{email}")
+	public Member findMember (@PathVariable String email){
+		return memberService.findMember(email);
 	}
 }
