@@ -6,17 +6,13 @@ import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 
 public class MemberDto {
 	
@@ -43,20 +39,6 @@ public class MemberDto {
 	
 	@ApiModelProperty(value = "활동 상태", example = "ACTIVE, QUIT", required = true)
 	private Status status;
-
-	@Builder
-	public MemberDto(String memberId, String email, String pwd, String nickName, String profileImg, String intro,
-			Role role, Status status, String  phone) {
-
-		this.memberId = memberId;
-		this.email = email;
-		this.pwd = pwd;
-		this.nickName = nickName;
-		this.profileImg = profileImg;
-		this.intro = intro;
-		this.role = role;
-		this.status = status;
-	}
 
 	// Entity 클래스인 Member에 객체를 주입하여 Entity 클래스를 반환하는 메소드
 	public Member toEntity() {
