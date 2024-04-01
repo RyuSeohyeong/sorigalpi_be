@@ -33,7 +33,7 @@ public class MemberController {
   
 	@ApiOperation(value="회원 가입", notes="회원 가입")
 	@PostMapping("/signUp")
-	public String createMember(@RequestBody MemberDto memberDto) {
+	public Member createMember(@RequestBody MemberDto memberDto) {
 		
 		return memberService.createMember(memberDto);
 	}
