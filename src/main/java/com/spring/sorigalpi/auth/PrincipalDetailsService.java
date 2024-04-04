@@ -1,4 +1,4 @@
-package com.spring.sorigalpi.token;
+package com.spring.sorigalpi.auth;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

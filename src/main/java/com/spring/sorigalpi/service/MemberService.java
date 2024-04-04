@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.sorigalpi.auth.JwtProvider;
+import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
@@ -16,8 +18,6 @@ import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
 import com.spring.sorigalpi.repository.MemberRepository;
-import com.spring.sorigalpi.token.JwtProvider;
-import com.spring.sorigalpi.token.PrincipalDetails;
 
 import lombok.RequiredArgsConstructor;
 

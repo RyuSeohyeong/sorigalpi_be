@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.service.MemberService;
-import com.spring.sorigalpi.token.PrincipalDetails;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
