@@ -1,5 +1,8 @@
 package com.spring.sorigalpi.entity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.spring.sorigalpi.base.Base;
-import com.spring.sorigalpi.enumtype.MemberEnum.Role;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
 import io.swagger.annotations.ApiModel;
@@ -33,8 +35,6 @@ import lombok.NoArgsConstructor;
 										 */
 
 public class Member extends Base {
-	
-
 
 	@Id
 	@ApiModelProperty(value = "사용자 고유 아이디", required = true)
@@ -63,14 +63,12 @@ public class Member extends Base {
 
 	@ApiModelProperty(value = "권한", example = "ADMIN, USER, GUEST, BLOCK", required = true)
 	@Column(name = "role")
-	@Enumerated(value = EnumType.STRING)
-	private Role role;
+	private String role;
 
 	@ApiModelProperty(value = "활동 상태", example = "ACTIVE, QUIT", required = true)
 	@Column(name = "status")
 	@Enumerated(value = EnumType.STRING)
 	private Status status;
-	
 
 	public void updateMember(String email, String pwd, String nickName, String profileImg,
 			String intro) { /*
@@ -84,7 +82,12 @@ public class Member extends Base {
 		this.profileImg = profileImg;
 		this.intro = intro;
 	}
-	
-	
+
+	public List<String> getRolesList() {
+		if (this.role.length() > 0) {
+			return Arrays.asList(this.role.split(","));
+		}
+		return new ArrayList<>();
+	}
 
 }
