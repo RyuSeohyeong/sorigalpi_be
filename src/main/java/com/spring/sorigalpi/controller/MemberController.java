@@ -17,6 +17,8 @@ import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
+import com.spring.sorigalpi.exception.BaseException;
+import com.spring.sorigalpi.exception.ErrorCode;
 import com.spring.sorigalpi.service.MemberService;
 
 import io.swagger.annotations.Api;
@@ -80,11 +82,23 @@ public class MemberController {
 	public String info(@AuthenticationPrincipal PrincipalDetails principalDetails, Authentication authentication) {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("PrincipalDetails "); // append메서드: 문자열 추가
-		sb.append(principalDetails);
+	    if (principalDetails != null) {
+	        sb.append("PrincipalDetails ");
+	        sb.append(principalDetails);
+	        sb.append("\n");
+	    } else {
+	        // PrincipalDetails가 null인 경우에 대한 예외 처리
+	        throw new BaseException(ErrorCode.INVALID_TOKEN);
+	    }
 		sb.append("\n"); // \n 줄바꿈
-		sb.append("authentication ");
-		sb.append(authentication);
+		if (authentication != null) {
+	        sb.append("authentication ");
+	        sb.append(authentication);
+	        sb.append("\n");
+	    } else {
+	        // PrincipalDetails가 null인 경우에 대한 예외 처리
+	        throw new BaseException(ErrorCode.INVALID_TOKEN);
+	    }
 
 		return sb.toString();
 
