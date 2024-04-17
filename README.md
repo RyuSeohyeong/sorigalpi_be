@@ -17,8 +17,14 @@
 - 💡 제작 동기: 아이들이 그림을 그리고 부모님이 음성을 녹음해서 소리가 나오는 그림동화책을 만들자는 취지에서 시작되었습니다.
 
 ## Technologies
+- STS4, SpringBoot, React, Java, Spring Data JPA, Apache Tomcat, MySQL
+- Collaboration: Swagger, GitHub, Figma, Google Spread Sheets, ERD Cloud, Notion
 
 # [2] Member
+- 한예지
+- 우주
+- 최현진
+- 류서형
 
 # [3] Contact
 - 📧 sorigalpi@gmail.com
