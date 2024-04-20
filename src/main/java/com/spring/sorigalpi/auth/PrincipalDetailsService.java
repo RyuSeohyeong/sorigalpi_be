@@ -1,4 +1,4 @@
-package com.spring.sorigalpi.token;
+package com.spring.sorigalpi.auth;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +20,7 @@ public class PrincipalDetailsService implements UserDetailsService { // UserDeta
 	private final MemberRepository memberRepository;
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) {
 		Member member = memberRepository.findByEmail(email)
 				.orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
 		return new PrincipalDetails(member);

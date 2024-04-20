@@ -1,4 +1,4 @@
-package com.spring.sorigalpi.token;
+package com.spring.sorigalpi.auth;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

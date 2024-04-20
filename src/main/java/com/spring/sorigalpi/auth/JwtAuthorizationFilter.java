@@ -1,4 +1,4 @@
-package com.spring.sorigalpi.token;
+package com.spring.sorigalpi.auth;
 
 import java.io.IOException;
 
@@ -14,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.spring.sorigalpi.entity.Member;
+import com.spring.sorigalpi.exception.BaseException;
+import com.spring.sorigalpi.exception.ErrorCode;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -55,8 +57,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			// SecurityContextHolder.getContext(): 보안 컨텍스트(사용자의 인증 정보,권한 등을 저장한다.)
 			// authentication에 사용자 정보가 저장되어있데 보안 컨텍스트에 인증된 사용자 정보를 저장한다.
 			SecurityContextHolder.getContext().setAuthentication(authentication);
+		} else {
+		    // 유효한 토큰 null인 경우에 대한 처리
+		    System.out.println("tokenMember is null. Unable to authenticate.");
 		}
-
-		chain.doFilter(request, response);
-	}
+		chain.doFilter(request, response); //필터 단에서 null일 경우 유효한 토큰이 아님이라고 예외 처리
+} 
 }

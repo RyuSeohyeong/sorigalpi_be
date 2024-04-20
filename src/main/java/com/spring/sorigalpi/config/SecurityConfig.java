@@ -10,11 +10,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.spring.sorigalpi.auth.JwtAuthenticationFilter;
+import com.spring.sorigalpi.auth.JwtAuthorizationFilter;
+import com.spring.sorigalpi.auth.JwtProvider;
+import com.spring.sorigalpi.auth.PrincipalDetailsService;
 import com.spring.sorigalpi.repository.MemberRepository;
-import com.spring.sorigalpi.token.JwtAuthenticationFilter;
-import com.spring.sorigalpi.token.JwtAuthorizationFilter;
-import com.spring.sorigalpi.token.JwtProvider;
-import com.spring.sorigalpi.token.PrincipalDetailsService;
 
 import lombok.RequiredArgsConstructor;
 
