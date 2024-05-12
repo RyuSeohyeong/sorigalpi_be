@@ -51,36 +51,24 @@ public class JwtProvider {
 
 	// 토큰 검증하기
 	// 토큰 만료 시간이 지났는지 확인한다.
-	public Member validToken(String jwtToken) {
-		try {
 
-			String email = JWT.require(this.getSign()) // JWT 객체를 생성 후 getSign 메소드로 서명에 사용되는 알고리즘을 가져온다.
-					.build().verify(jwtToken).getClaim("email").asString(); // JWT 페이로드에서 email 정보를 가져온 후 문자열로 반환한다.
+		public Member validToken(String jwtToken) throws BaseException {
+		    String email = JWT.require(this.getSign())
+		            .build().verify(jwtToken).getClaim("email").asString();
 
-			// email의 값이 비어있는 값이다.
-			if (email == null) {
-				return null;
-			}
+		    if (email == null) {
+		        throw new BaseException(ErrorCode.INVALID_TOKEN);
+		    }
 
-			// 토큰의 만료 시간이 지나지 않았는지 확인한다.
-			Date expiresAt = JWT.require(this.getSign()).acceptExpiresAt(EXPIRE_TIME).build().verify(jwtToken)
-					.getExpiresAt();
-			if (!this.validExpiredTime(expiresAt)) {
-				// 만료시간이 지나면 만료시간 지남에 대한 예외 반환
-				return null;
-			}
+		    Date expiresAt = JWT.require(this.getSign()).acceptExpiresAt(EXPIRE_TIME).build().verify(jwtToken)
+		            .getExpiresAt();
+		    if (!this.validExpiredTime(expiresAt)) {
+		        throw new BaseException(ErrorCode.EXPIRED_TOKEN);
+		    }
 
-			// 만료시간이 지나지않았을 때 (토큰이 유효할 때)
-			Member member = memberRepository.findByEmail(email)
-					.orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
-			return member;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		    return memberRepository.findByEmail(email)
+		            .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
 		}
-
-	}
 
 	// 토큰의 만료 시간을 검증한다.
 	private boolean validExpiredTime(Date expired) {
