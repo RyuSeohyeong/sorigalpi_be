@@ -96,8 +96,8 @@ public class MemberController {
 	        sb.append(authentication);
 	        sb.append("\n");
 	    } else {
-	        // PrincipalDetails가 null인 경우에 대한 예외 처리
-	        throw new BaseException(ErrorCode.INVALID_TOKEN);
+	        // Authentication이 null인 경우에 대한 예외 처리
+	        throw new BaseException(ErrorCode.NO_AUTHORIZED);
 	    }
 
 		return sb.toString();
