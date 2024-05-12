@@ -57,11 +57,9 @@ public class MemberService extends Base {
 		// findById 메소드를 통해 값을 가져오면서 해당 값은 영속성을 가진다.
 		Member member = memberRepository.findById(memberId)
 				.orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
-		
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		// 변경할 비밀번호 암호화하여 저장
-		String updatePwd = passwordEncoder.encode(memberDto.getPwd());
+		String updatePwd = pwdEncoder.encode(memberDto.getPwd());
 		
 		
 		// 값 변경
