@@ -56,7 +56,7 @@ public class MemberController {
 	}
 
 	@ApiOperation(value = "사용자 정보 변경", notes = "사용자 정보 변경")
-	@PutMapping("/{memberId}")
+	@PutMapping("/info/{memberId}")
 	public String updatMember(
 			@ApiParam(name = "memberId", value = "사용자 고유 아이디", required = true) @PathVariable String memberId,
 			@RequestBody MemberDto memberDto) {
@@ -64,7 +64,7 @@ public class MemberController {
 	}
 
 	@ApiOperation(value = "사용자 탈퇴", notes = "사용자 탈퇴")
-	@DeleteMapping("/{memberId}")
+	@DeleteMapping("/info/{memberId}")
 	public String deleteMember(
 			@ApiParam(name = "memberId", value = "사용자 고유 아이디", required = true) @PathVariable String memberId) {
 		return memberService.deleteMember(memberId);
@@ -72,7 +72,7 @@ public class MemberController {
 
 	@ApiOperation(value = "사용자 email로 찾기", notes = "사용자 email로 찾기")
 
-	@GetMapping("/{email}")
+	@GetMapping("/find/{email}")
 	public Member findMember(@PathVariable String email) {
 		return memberService.findMember(email);
 	}
@@ -96,8 +96,8 @@ public class MemberController {
 	        sb.append(authentication);
 	        sb.append("\n");
 	    } else {
-	        // PrincipalDetails가 null인 경우에 대한 예외 처리
-	        throw new BaseException(ErrorCode.INVALID_TOKEN);
+	        // Authentication이 null인 경우에 대한 예외 처리
+	        throw new BaseException(ErrorCode.NO_AUTHORIZED);
 	    }
 
 		return sb.toString();

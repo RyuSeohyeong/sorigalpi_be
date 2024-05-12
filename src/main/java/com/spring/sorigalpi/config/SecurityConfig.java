@@ -10,6 +10,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.spring.sorigalpi.auth.AccessDeniedHandlerImpl;
+import com.spring.sorigalpi.auth.AuthenticationEntryPointImpl;
 import com.spring.sorigalpi.auth.JwtAuthenticationFilter;
 import com.spring.sorigalpi.auth.JwtAuthorizationFilter;
 import com.spring.sorigalpi.auth.JwtProvider;
@@ -26,6 +28,9 @@ public class SecurityConfig {
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final PrincipalDetailsService principalDetailsService;
 	private final MemberRepository memberRepository;
+	private final AuthenticationEntryPointImpl authenticationEntryPointImpl;
+	private final AccessDeniedHandlerImpl accessDeniedHandlerImpl;
+	
 
 	@Bean
 	public AuthenticationManager authenticationManager() throws Exception {
@@ -47,17 +52,34 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-		http.cors().disable().csrf().disable().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().formLogin().disable().httpBasic()
-				.disable()
+		 http
+	        .cors().disable()
+	        .csrf().disable()
+	       
+	        .sessionManagement()
+	            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+	        .and()
+	        .formLogin().disable()
+	        .httpBasic().disable()
+	        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider()))
+	        .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtTokenProvider(),
+	                    principalDetailsService))
+	        .authorizeRequests()
+	        .antMatchers("/member/signUp").permitAll()
+	        .antMatchers("/member/login").permitAll()
+	        .antMatchers("/member/info/**").permitAll()
+	        .antMatchers("/member/find/**").permitAll()
+	        .antMatchers("/member/listMembers").hasRole("ADMIN")
+	        .antMatchers("/test").hasRole("ADMIN")
+	        .antMatchers("/member/jwtTokenInfo").hasRole("ADMIN")
+	        .anyRequest().authenticated()
+	        .and()
+	        .exceptionHandling()
+            .authenticationEntryPoint(authenticationEntryPointImpl)
+            .accessDeniedHandler(accessDeniedHandlerImpl);
+           
 
-				.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider()))
-				.addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtTokenProvider(),
-						principalDetailsService))
-
-				.authorizeRequests().anyRequest().permitAll();
-
-		return http.build();
+	    return http.build();
 
 	}
 }
