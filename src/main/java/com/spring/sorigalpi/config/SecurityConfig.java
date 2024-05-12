@@ -2,7 +2,6 @@ package com.spring.sorigalpi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +10,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.spring.sorigalpi.auth.AccessDeniedHandlerImpl;
+import com.spring.sorigalpi.auth.AuthenticationEntryPointImpl;
 import com.spring.sorigalpi.auth.JwtAuthenticationFilter;
 import com.spring.sorigalpi.auth.JwtAuthorizationFilter;
 import com.spring.sorigalpi.auth.JwtProvider;
@@ -27,6 +28,9 @@ public class SecurityConfig {
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final PrincipalDetailsService principalDetailsService;
 	private final MemberRepository memberRepository;
+	private final AuthenticationEntryPointImpl authenticationEntryPointImpl;
+	private final AccessDeniedHandlerImpl accessDeniedHandlerImpl;
+	
 
 	@Bean
 	public AuthenticationManager authenticationManager() throws Exception {
@@ -68,8 +72,12 @@ public class SecurityConfig {
 	        .antMatchers("/member/listMembers").hasRole("ADMIN")
 	        .antMatchers("/test").hasRole("ADMIN")
 	        .antMatchers("/member/jwtTokenInfo").hasRole("ADMIN")
-	        .anyRequest().authenticated();
-	     
+	        .anyRequest().authenticated()
+	        .and()
+	        .exceptionHandling()
+            .authenticationEntryPoint(authenticationEntryPointImpl)
+            .accessDeniedHandler(accessDeniedHandlerImpl);
+           
 
 	    return http.build();
 
