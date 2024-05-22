@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 import com.spring.sorigalpi.auth.AccessDeniedHandlerImpl;
 import com.spring.sorigalpi.auth.AuthenticationEntryPointImpl;
@@ -65,12 +67,14 @@ public class SecurityConfig {
 	        .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtTokenProvider(),
 	                    principalDetailsService))
 	        .authorizeRequests()
+	        .antMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**", "/v3/api-docs/**")
+            .permitAll()
 	        .antMatchers("/member/signUp").permitAll()
 	        .antMatchers("/member/login").permitAll()
 	        .antMatchers("/member/info/**").permitAll()
 	        .antMatchers("/member/find/**").permitAll()
 	        .antMatchers("/member/listMembers").hasRole("ADMIN")
-	        .antMatchers("/test").hasRole("ADMIN")
+	        .antMatchers("/test").permitAll()
 	        .antMatchers("/member/jwtTokenInfo").hasRole("ADMIN")
 	        .anyRequest().authenticated()
 	        .and()
@@ -82,4 +86,8 @@ public class SecurityConfig {
 	    return http.build();
 
 	}
+	
+	 @Bean public HttpFirewall defaultHttpFirewall() {
+	        return new DefaultHttpFirewall();
+}
 }
