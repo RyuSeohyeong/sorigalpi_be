@@ -113,7 +113,7 @@ jobs:
       - name: Commit and Push
         if: env.STATE_changed == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.SORIGALPI_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.SORIGALPI_SECRET}}
         run: |
           cd sorigalpi_swagger
           git remote add sorigalpi_swagger https://${GITHUB_TOKEN}@github.com/RyuSeohyeong/sorigalpi_swagger.git
