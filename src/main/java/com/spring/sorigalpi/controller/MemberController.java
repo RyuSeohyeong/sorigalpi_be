@@ -2,6 +2,8 @@ package com.spring.sorigalpi.controller;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +21,8 @@ import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
+
+import com.spring.sorigalpi.service.EmailTokenService;
 import com.spring.sorigalpi.service.MemberService;
 
 import io.swagger.annotations.Api;
@@ -34,12 +38,17 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
+	private final EmailTokenService emailTokenService;
 
 	@ApiOperation(value = "회원 가입", notes = "회원 가입")
 	@PostMapping("/signUp")
-	public Member createMember(@RequestBody MemberDto memberDto) {
+	public String createMember(@RequestBody MemberDto memberDto) throws MessagingException {
 
-		return memberService.createMember(memberDto);
+		memberService.createMember(memberDto);
+		emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
+		
+		return "회원 가입이 완료되었습니다.";
+		
 	}
 
 	@ApiOperation(value = "로그인", notes = "로그인")
