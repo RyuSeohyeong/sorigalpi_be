@@ -25,7 +25,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().println("{ \"status\" : \"" + errorCode.getHttpStatus()
         		+ "\", \"errorMessage\" : \"" +  "INVALID_AUTHORIZATION"
                 + "\", \"code\" : \"" +  errorCode.getCode()

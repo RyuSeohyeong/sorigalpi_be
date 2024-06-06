@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 import com.spring.sorigalpi.auth.AccessDeniedHandlerImpl;
 import com.spring.sorigalpi.auth.AuthenticationEntryPointImpl;
@@ -61,17 +63,14 @@ public class SecurityConfig {
 	        .and()
 	        .formLogin().disable()
 	        .httpBasic().disable()
-	        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider()))
-	        .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtTokenProvider(),
+	        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider())) // 인증
+	        .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtTokenProvider(), // 인가
 	                    principalDetailsService))
 	        .authorizeRequests()
-	        .antMatchers("/member/signUp").permitAll()
-	        .antMatchers("/member/login").permitAll()
-	        .antMatchers("/member/info/**").permitAll()
-	        .antMatchers("/member/find/**").permitAll()
-	        .antMatchers("/member/listMembers").hasRole("ADMIN")
-	        .antMatchers("/test").hasRole("ADMIN")
-	        .antMatchers("/member/jwtTokenInfo").hasRole("ADMIN")
+	      
+            .antMatchers(publicAuth()).permitAll()
+            .antMatchers(adminAuth()).hasRole("ADMIN")
+	        
 	        .anyRequest().authenticated()
 	        .and()
 	        .exceptionHandling()
@@ -81,5 +80,34 @@ public class SecurityConfig {
 
 	    return http.build();
 
+	   
 	}
+	
+	 private String[] publicAuth() {
+	        return new String[]{
+	            "/swagger", 
+	            "/swagger-ui.html", 
+	            "/swagger-ui/**", 
+	            "/api-docs", 
+	            "/api-docs/**", 
+	            "/v3/api-docs/**", 
+	            "/member/signUp", 
+	            "/member/login", 
+	            "/member/info/**", 
+	            "/member/find/**", 
+	            "/confirmEmail/**"
+	        };
+	    }
+
+	    private String[] adminAuth() {
+	        return new String[]{
+	            "/member/listMembers", 
+	            "/member/jwtTokenInfo"
+	        };
+	    }
+	
+	
+	 @Bean public HttpFirewall defaultHttpFirewall() {
+	        return new DefaultHttpFirewall();
+}
 }
