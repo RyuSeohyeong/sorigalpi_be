@@ -1,6 +1,8 @@
 package com.spring.sorigalpi.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -33,6 +35,12 @@ public class MemberService extends Base {
 	@Transactional
 	public Member createMember(MemberDto memberDto) { // 사용자 추가 메소드
 
+		String email = memberDto.getEmail();
+		
+		Optional<Member> findmember = memberRepository.findByEmail(email);
+		
+	    if (!findmember.isPresent()) {
+	      
 		// memberDto에서 pwd값을 가져와 BCryptPasswordEncoder로 회원의 비밀번호를 암호화한다.
 		String encodedPassword = pwdEncoder.encode(memberDto.getPwd());
 
@@ -46,7 +54,13 @@ public class MemberService extends Base {
 		memberRepository.save(member);
 
 		return member;
+		
+	    } else {
+	    	
+	    	throw new BaseException(ErrorCode.MEMBER_EXISTED);
 	}
+	    
+}
 
 	public List<Member> listMembers() { // 사용자 조회 메소드
 		return memberRepository.findAll();

@@ -20,7 +20,10 @@ public enum ErrorCode {
 
 	// 404 Not Found 서버가 요청 받은 리소스를 찾을 수 없음
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER_001", "존재하지 않는 이메일입니다."),
-    TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "TOKEN_003", "존재하지 않는 토큰입니다.");
+    TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "TOKEN_003", "존재하지 않는 토큰입니다."),
+	
+	//409 Conflict
+	MEMBER_EXISTED(HttpStatus.CONFLICT, "MEMBER_002", "이미 존재하는 회원입니다.");
 	
 	private final HttpStatus httpStatus;
 	private final String code;
