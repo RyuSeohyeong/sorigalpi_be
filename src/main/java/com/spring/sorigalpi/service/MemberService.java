@@ -85,12 +85,20 @@ public class MemberService extends Base {
 
 		String email = memberLoginDto.getEmail();
 		String pwd = memberLoginDto.getPwd();
+		
+	    // 이메일 인증 여부 확인
+	    Member member = memberRepository.findByEmail(email)
+	        .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+
+	    if (!member.isEmailVerified()) {
+	        throw new BaseException(ErrorCode.EMAIL_NOT_VERIFID);
+	    }
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, pwd);
 
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-		// 인증이 완료된 객체이면,
+		// + JWT 인증이 완료된 객체이면,
 		if (authentication.isAuthenticated()) {
 			PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
