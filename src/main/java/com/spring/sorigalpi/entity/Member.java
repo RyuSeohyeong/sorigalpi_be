@@ -69,6 +69,10 @@ public class Member extends Base {
 	@Column(name = "status")
 	@Enumerated(value = EnumType.STRING)
 	private Status status;
+	
+	@Column(name = "emailVerified")
+	@ApiModelProperty(value = "이메일 인증 여부", example = "0/1", required = true)
+	private boolean emailVerified;
 
 	public void updateMember(String email, String pwd, String nickName, String profileImg,
 			String intro) { /*
@@ -87,7 +91,12 @@ public class Member extends Base {
 		if (this.role.length() > 0) {
 			return Arrays.asList(this.role.split(","));
 		}
+		
 		return new ArrayList<>();
 	}
 
+	public void emailVerified() { // 이메일 인증 완료
+	
+		this.emailVerified = true;
+	}
 }
