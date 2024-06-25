@@ -3,6 +3,7 @@ package com.spring.sorigalpi.controller;
 import javax.validation.Valid;
 
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import com.spring.sorigalpi.service.EmailService;
 
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Validated
 @RestController
 @RequiredArgsConstructor
