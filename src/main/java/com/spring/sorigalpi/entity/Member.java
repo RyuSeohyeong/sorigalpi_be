@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.spring.sorigalpi.base.Base;
+import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
 import io.swagger.annotations.ApiModel;
@@ -98,5 +99,9 @@ public class Member extends Base {
 	public void emailVerified() { // 이메일 인증 완료
 	
 		this.emailVerified = true;
+	}
+	
+	public void updatePwd(MemberDto.PwdDto requestDto) {
+		this.pwd = requestDto.getPwd();
 	}
 }

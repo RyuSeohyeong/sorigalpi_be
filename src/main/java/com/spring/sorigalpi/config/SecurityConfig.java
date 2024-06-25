@@ -94,7 +94,7 @@ public class SecurityConfig {
 	            "/member/signUp", 
 	            "/member/login", 
 	            "/member/info/**", 
-	            "/member/find/**", 
+	            "/member/find/**",
 	            "/confirmEmail/**"
 	        };
 	    }
