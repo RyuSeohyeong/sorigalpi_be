@@ -13,6 +13,7 @@ public enum ErrorCode {
 	INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN_001", "유효하지 않은 토큰입니다."),
 	INVALID_AUTHORIZATION(HttpStatus.UNAUTHORIZED, "AUTHORIZE_001", "유효하지 않은 권한입니다."),
 	EMAIL_NOT_VERIFID(HttpStatus.UNAUTHORIZED, "AUTHORIZE_002", "이메일 인증이 필요합니다."),
+	INVALID_LINK(HttpStatus.UNAUTHORIZED, "AUTHORIZE_003", "유효하지 않은 링크입니다."),
 	
 	// 403 Forbidden 권한이 없습니다.
 	EXPIRED_TOKEN(HttpStatus.FORBIDDEN, "TOKEN_002", "만료된 토큰입니다."),
