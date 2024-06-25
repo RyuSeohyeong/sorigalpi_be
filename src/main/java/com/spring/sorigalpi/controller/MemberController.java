@@ -6,6 +6,7 @@ import javax.mail.MessagingException;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,6 @@ import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
-
 import com.spring.sorigalpi.service.EmailTokenService;
 import com.spring.sorigalpi.service.MemberService;
 
@@ -30,6 +30,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api(tags = "member")
 @RestController("memberController")
 @RequestMapping(value = "/member")
