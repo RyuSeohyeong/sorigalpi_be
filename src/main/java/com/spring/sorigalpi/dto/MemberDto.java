@@ -44,4 +44,12 @@ public class MemberDto {
 		return Member.builder().memberId(memberId).email(email).pwd(pwd).nickName(nickName).profileImg(profileImg)
 				.intro(intro).role(role).status(status).build();
 	}
+	
+	@Getter
+	@Setter
+	public static class PwdDto{
+	
+	@ApiModelProperty(value = "비밀번호")
+	private String pwd;
+	}
 }
