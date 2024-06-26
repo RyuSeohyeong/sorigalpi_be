@@ -7,7 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +15,7 @@ import com.spring.sorigalpi.auth.JwtProvider;
 import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.MemberDto;
-import com.spring.sorigalpi.dto.MemberDto.PwdDto;
+
 import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
