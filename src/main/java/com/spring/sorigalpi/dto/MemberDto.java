@@ -1,9 +1,11 @@
 package com.spring.sorigalpi.dto;
 
+import java.time.LocalDateTime;
+
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,32 +14,42 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Schema(description = "사용자")
 
 public class MemberDto {
 
-	@ApiModelProperty(value = "사용자 고유 아이디", required = true)
+	@Schema(description = "사용자 고유 ID", example = "AbCdE", required = true)
 	private String memberId;
 
-	@ApiModelProperty(value = "이메일", example = "email@email.com", required = true)
+	@Schema(description = "이메일", example = "abc@efg.com", required = true)
 	private String email;
 
-	@ApiModelProperty(value = "비밀번호", example = "abcde12345!", required = true)
+	@Schema(description = "비밀번호", example = "abcde123!", required = true)
 	private String pwd;
 
-	@ApiModelProperty(value = "닉네임", example = "닉네임", required = true)
+	@Schema(description = "닉네임", example = "닉네임", required = true)
 	private String nickName;
 
-	@ApiModelProperty(value = "프로필 사진", example = "image.jpg", required = false)
+	@Schema(description = "프로필 사진", example = "abc.jpg")
 	private String profileImg;
 
-	@ApiModelProperty(value = "자기 소개", example = "안녕하세요. 반갑습니다.", required = false)
+	@Schema(description = "자기소개", example = "안녕하세요.")
 	private String intro;
 
-	@ApiModelProperty(value = "권한", example = "ADMIN, USER, GUEST, BLOCK", required = true)
+	@Schema(description = "권한", example = "ADMIN, USER, GUEST, BLOCK", defaultValue = "USER", required = true)
 	private String role;
 
-	@ApiModelProperty(value = "활동 상태", example = "ACTIVE, QUIT", required = true)
+	@Schema(description = "활동 상태", example = "ACTIVE, QUIT", defaultValue = "ACTIVE", required = true)
 	private Status status;
+	
+	@Schema(description = "이메일 인증 여부", example = "0,1", defaultValue = "0", required = true)
+	private boolean emailVerified;
+	
+	@Schema(description = "만들어진 날짜", example = "YYYY-MM-NN 00:00:00", required = true)
+	private LocalDateTime creDate;
+	
+	@Schema(description = "수정된 날짜", example = "YYYY-MM-NN 00:00:00", required = true)
+	private LocalDateTime modifiedDate;
 
 	// Entity 클래스인 Member에 객체를 주입하여 Entity 클래스를 반환하는 메소드
 	public Member toEntity() {
@@ -47,9 +59,10 @@ public class MemberDto {
 	
 	@Getter
 	@Setter
+	@Schema(description = "재설정 비밀번호")
 	public static class PwdDto{
 	
-	@ApiModelProperty(value = "비밀번호")
+	@Schema(description = "재설정 비밀번호", example = "abcde123!")
 	private String pwd;
 	}
 }
