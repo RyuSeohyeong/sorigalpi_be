@@ -26,22 +26,31 @@ import com.spring.sorigalpi.service.EmailTokenService;
 import com.spring.sorigalpi.service.MemberService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@Api(tags = "member")
 @RestController("memberController")
 @RequestMapping(value = "/member")
 @RequiredArgsConstructor
+@Api(tags = "사용자")
 
 public class MemberController {
 
 	private final MemberService memberService;
 	private final EmailTokenService emailTokenService;
 
-	@ApiOperation(value = "회원 가입", notes = "회원 가입")
+	@ApiOperation(
+	        value = "사용자 회원가입",
+	        notes = "사용자가 가입을 위한 정보를 기입하고 가입한다.")
+    @ApiImplicitParam(
+            name = "MemberDto",
+            value = "사용자 정보",
+            required = true,
+            paramType = "body",
+            defaultValue = "None")
 	@PostMapping("/signUp")
 	public String createMember(@RequestBody MemberDto memberDto) throws MessagingException {
 
@@ -52,42 +61,86 @@ public class MemberController {
 		
 	}
 
-	@ApiOperation(value = "로그인", notes = "로그인")
+	@ApiOperation(
+	        value = "사용자 로그인",
+	        notes = "사용자가 이메일과 비밀번호를 입력하여 로그인한다.")
+    @ApiImplicitParam(
+            name = "MemberLoginDto",
+            value = "사용자 로그인",
+            required = true,
+            paramType = "body",
+            defaultValue = "None")
 	@PostMapping("/login")
 	public String login(@RequestBody MemberLoginDto memberLoginDto) {
 
 		return memberService.login(memberLoginDto);
 	}
 
-	@ApiOperation(value = "사용자 조회", notes = "사용자 조회")
+	@ApiOperation(
+	        value = "사용자 조회",
+	        notes = "[관리자] 사용자들의 목록을 전체 조회한다.")
 	@GetMapping("/listMembers")
 	public List<Member> listeMembers() {
 		return (List<Member>) memberService.listMembers();
 	}
 
-	@ApiOperation(value = "사용자 정보 변경", notes = "사용자 정보 변경")
+	@ApiOperation(
+	        value = "사용자 정보 변경",
+	        notes = "사용자의 ID를 통해 정보를 변경한다.")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(
+            name = "memeberId",
+            value = "사용자 고유 ID",
+            required = true,
+            dataType = "string",
+            paramType = "path",
+            defaultValue = "None"),
+    	@ApiImplicitParam(
+                name = "MemberDto",
+                value = "사용자 정보",
+                required = true,
+                dataType = "string",
+                paramType = "body",
+                defaultValue = "None")})
 	@PutMapping("/info/{memberId}")
-	public String updatMember(
-			@ApiParam(name = "memberId", value = "사용자 고유 아이디", required = true) @PathVariable String memberId,
+	public String updatMember( @PathVariable String memberId,
 			@RequestBody MemberDto memberDto) {
 		return memberService.updateMember(memberId, memberDto);
 	}
 
-	@ApiOperation(value = "사용자 탈퇴", notes = "사용자 탈퇴")
+	@ApiOperation(
+	        value = "사용자 탈퇴",
+	        notes = "사용자의 ID를 통해 탈퇴한다.")
+   @ApiImplicitParam(
+                name = "memberId",
+                value = "사용자 고유 ID",
+                required = true,
+                dataType = "string",
+                paramType = "path",
+                defaultValue = "None")
 	@DeleteMapping("/info/{memberId}")
-	public String deleteMember(
-			@ApiParam(name = "memberId", value = "사용자 고유 아이디", required = true) @PathVariable String memberId) {
+	public String deleteMember(@PathVariable String memberId) {
 		return memberService.deleteMember(memberId);
 	}
 
-	@ApiOperation(value = "사용자 email로 찾기", notes = "사용자 email로 찾기")
-
-	@GetMapping("/find/{email}")
+	@ApiOperation(
+	        value = "사용자 이메일 찾기",
+	        notes = "[관리자] 사용자가 사용하는 이메일을 통해 사용자 정보를 조회한다.")
+	   @ApiImplicitParam(
+               name = "email",
+               value = "이메일",
+               required = true,
+               dataType = "string",
+               paramType = "path",
+               defaultValue = "None")
+	@GetMapping("/find/email/{email}")
 	public Member findMember(@PathVariable String email) {
 		return memberService.findMember(email);
 	}
 
-	@ApiOperation(value = "사용자 JWT Token인증 확인", notes = "사용자 JWT Token인증 확인")
+	@ApiOperation(
+	        value = "사용자 JWT Token인증 확인",
+	        notes = "사용자의 JWT를 통해 인증되었는지 확인한다.")
 	@GetMapping("/jwtTokenInfo")
 	public String info(@AuthenticationPrincipal PrincipalDetails principalDetails, Authentication authentication) {
 

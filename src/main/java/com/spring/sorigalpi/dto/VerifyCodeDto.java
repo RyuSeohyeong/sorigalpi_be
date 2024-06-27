@@ -1,7 +1,6 @@
 package com.spring.sorigalpi.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +10,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "비밀번호 확인")
+@Schema(description = "비밀번호 재설정을 위한 이메일")
 
 public class VerifyCodeDto {
 
-	@ApiModelProperty(value = "이메일", required = true)
+	@Schema(description = "이메일", example = "abc@efg.com")
 	private String email;
 }

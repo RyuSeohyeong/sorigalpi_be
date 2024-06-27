@@ -92,17 +92,18 @@ public class SecurityConfig {
 	            "/api-docs/**", 
 	            "/v3/api-docs/**", 
 	            "/member/signUp", 
-	            "/member/login", 
-	            "/member/info/**", 
-	            "/member/find/**",
+	            "/member/login",
+	            "/member/jwtTokenInfo",
+	            "/member/info/**",
+	            "/member/find/pwd/**",
 	            "/confirmEmail/**"
 	        };
 	    }
 
 	    private String[] adminAuth() {
 	        return new String[]{
-	            "/member/listMembers", 
-	            "/member/jwtTokenInfo"
+	            "/member/listMembers",
+	            "/member/find/email/**"
 	        };
 	    }
 	

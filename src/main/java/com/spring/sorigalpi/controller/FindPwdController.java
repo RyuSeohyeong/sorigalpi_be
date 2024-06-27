@@ -21,18 +21,34 @@ import com.spring.sorigalpi.service.MemberService;
 import com.spring.sorigalpi.service.PwdMailService;
 import com.spring.sorigalpi.service.VerifyCodeService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping
+@Api(tags = "비밀번호 찾기")
+
 public class FindPwdController {
 
 	private final PwdMailService pwdMailService;
 	private final VerifyCodeService verifyCodeService;
 	private final MemberService memberService;
 
+	@ApiOperation(
+	        value = "사용자 비밀번호 재설정 메일 전송",
+	        notes = "사용자가 비밀번호 찾기를 통해 재설정 메일을 보낸다.")
+    @ApiImplicitParam(
+            name = "VerifyCodeDto",
+            value = "사용자 비밀번호 재설정을 위한 코드",
+            required = true,
+            dataType = "string",
+            paramType = "body",
+            defaultValue = "None")
 	@GetMapping("/member/find/pwd") // 비밀번호 찾기 재설정 메일 보내기
 	public ResponseEntity<HashMap> findPwdUrl(@RequestBody VerifyCodeDto verifyCodeDto) throws MessagingException {
 
@@ -53,6 +69,24 @@ public class FindPwdController {
 		}
 	}
 
+	@ApiOperation(
+	        value = "사용자 비밀번호 재설정",
+	        notes = "사용자가 비밀번호 재설정을 통한 발급 받은 코드로 비밀번호를 재설정한다.")
+    @ApiImplicitParams({
+    	@ApiImplicitParam(
+            name = "MemberDto.PwdDto",
+            value = "사용자가 변경할 비밀번호",
+            required = true,
+            dataType = "string",
+            paramType = "body",
+            defaultValue = "None"),
+    	@ApiImplicitParam(
+                name = "code",
+                value = "비밀번호 재설정을 통해 발급받은 코드",
+                required = true,
+                dataType = "string",
+                paramType = "path",
+                defaultValue = "None")})
 	@PostMapping("/member/find/pwd/{code}") // 비밀번호 재설정하기
 	public ResponseEntity<HashMap> changePwd(@RequestBody MemberDto.PwdDto requestDto, @PathVariable String code) {
 

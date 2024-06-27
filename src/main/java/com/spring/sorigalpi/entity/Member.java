@@ -15,15 +15,12 @@ import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@ApiModel(value = "회원")
 @Table(name = "t_member")
 @Getter
 @Builder
@@ -38,41 +35,32 @@ import lombok.NoArgsConstructor;
 public class Member extends Base {
 
 	@Id
-	@ApiModelProperty(value = "사용자 고유 아이디", required = true)
 	@Column(name = "memberId")
 	private String memberId;
 
-	@ApiModelProperty(value = "이메일", example = "email@email.com", required = true)
 	@Column(name = "email")
 	private String email;
 
-	@ApiModelProperty(value = "비밀번호", example = "abcde12345!", required = true)
 	@Column(name = "pwd")
 	private String pwd;
 
-	@ApiModelProperty(value = "닉네임", example = "닉네임", required = true)
 	@Column(name = "nickName")
 	private String nickName;
 
-	@ApiModelProperty(value = "프로필 사진", example = "image.jpg", required = false)
 	@Column(name = "profileImg")
 	private String profileImg;
 
-	@ApiModelProperty(value = "자기 소개", example = "안녕하세요. 반갑습니다.", required = false)
 	@Column(name = "intro")
 	private String intro;
 
-	@ApiModelProperty(value = "권한", example = "ADMIN, USER, GUEST, BLOCK", required = true)
 	@Column(name = "role")
 	private String role;
 
-	@ApiModelProperty(value = "활동 상태", example = "ACTIVE, QUIT", required = true)
 	@Column(name = "status")
 	@Enumerated(value = EnumType.STRING)
 	private Status status;
 	
 	@Column(name = "emailVerified")
-	@ApiModelProperty(value = "이메일 인증 여부", example = "0/1", required = true)
 	private boolean emailVerified;
 
 	public void updateMember(String email, String pwd, String nickName, String profileImg,
