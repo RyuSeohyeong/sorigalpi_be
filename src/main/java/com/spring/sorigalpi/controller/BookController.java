@@ -112,7 +112,7 @@ public class BookController {
 	
 	@ApiOperation(
 			value = "동화책 ID로 조회 API",
-			notes = "동화책ID로 하나 조회")
+			notes = "동화책ID로 하나 조회(상세페이지)")
 	@PostMapping("/searchBookById")
 	public Book searchOneBook(@RequestBody BookDTO bookDTO){ //동화책 id로 검색
 		

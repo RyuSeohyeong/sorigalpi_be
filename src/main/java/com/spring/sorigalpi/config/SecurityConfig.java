@@ -96,7 +96,9 @@ public class SecurityConfig {
 	            "/member/jwtTokenInfo",
 	            "/member/info/**",
 	            "/member/find/pwd/**",
-	            "/confirmEmail/**"
+	            "/confirmEmail/**",
+	            "/recentViewBook/**",
+	            "/book/**"
 	        };
 	    }
 
