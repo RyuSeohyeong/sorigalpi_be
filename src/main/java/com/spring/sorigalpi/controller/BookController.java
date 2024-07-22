@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.dto.BookDTO;
 import com.spring.sorigalpi.entity.Book;
 import com.spring.sorigalpi.service.BookService;
@@ -62,7 +64,8 @@ public class BookController {
 			notes = "화책 테이블 정보 생성 API") 
 	@ApiResponse(code = 200, message = "성공")
 	@PostMapping("/createBook") //동화책 생성
-	public ResponseEntity<BasicResponse> createBook(@RequestBody BookDTO bookDTO){
+	public ResponseEntity<BasicResponse> createBook(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody BookDTO bookDTO) {
+		bookDTO.setMemberId(principalDetails.getMember().getMemberId());
 		String bookId = bookService.createBook(bookDTO);
 		
 		BasicResponse basicResponse =  BasicResponse.builder()

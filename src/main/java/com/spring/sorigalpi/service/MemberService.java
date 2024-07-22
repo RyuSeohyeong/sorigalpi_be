@@ -69,9 +69,9 @@ public class MemberService extends Base {
 	}
 
 	@Transactional
-	public String updateMember(String memberId, MemberDto memberDto) { // 사용자 정보 변경 메소드
+	public String updateMember(MemberDto memberDto) { // 사용자 정보 변경 메소드
 		// findById 메소드를 통해 값을 가져오면서 해당 값은 영속성을 가진다.
-		Member member = memberRepository.findById(memberId)
+		Member member = memberRepository.findById(memberDto.getMemberId())
 				.orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
 
 		// 변경할 비밀번호 암호화하여 저장
