@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.auth.PrincipalDetails;
+import com.spring.sorigalpi.base.BaseResponse;
+import com.spring.sorigalpi.base.BaseResponseService;
+import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
-import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
+import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.service.EmailTokenService;
 import com.spring.sorigalpi.service.MemberService;
 
@@ -39,17 +42,21 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
-	private final EmailTokenService emailTokenService;
+	//private final EmailTokenService emailTokenService;
+	private final BaseResponseService baseResponseService;
 
 	@ApiOperation(value = "회원 가입", notes = "회원 가입")
 	@PostMapping("/signUp")
-	public String createMember(@RequestBody MemberDto memberDto) throws MessagingException {
+	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) {
 
-		memberService.createMember(memberDto);
-		emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
+		try {
+			memberService.createMember(memberDto);
+	//emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
+		return baseResponseService.responseSuccess(memberDto);
 		
-		return "회원 가입이 완료되었습니다.";
-		
+		} catch (BaseException e) {
+			return baseResponseService.responseFail(e.status);
+		}
 	}
 
 	@ApiOperation(value = "로그인", notes = "로그인")
@@ -98,7 +105,7 @@ public class MemberController {
 	        sb.append("\n");
 	    } else {
 	        // PrincipalDetails가 null인 경우에 대한 예외 처리
-	        throw new BaseException(ErrorCode.INVALID_TOKEN);
+	        throw new OtherException(ErrorCode.INVALID_TOKEN);
 	    }
 		sb.append("\n"); // \n 줄바꿈
 		if (authentication != null) {
@@ -107,7 +114,7 @@ public class MemberController {
 	        sb.append("\n");
 	    } else {
 	        // Authentication이 null인 경우에 대한 예외 처리
-	        throw new BaseException(ErrorCode.NO_AUTHORIZED);
+	        throw new OtherException(ErrorCode.NO_AUTHORIZED);
 	    }
 
 		return sb.toString();
