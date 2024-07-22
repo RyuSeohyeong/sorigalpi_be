@@ -5,13 +5,13 @@ import org.springframework.http.HttpStatus;
 import lombok.Getter;
 
 @Getter
-public class BaseException extends RuntimeException {
+public class OtherException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
 	ErrorCode errorCode;
 
-	public BaseException(ErrorCode errorCode) {
+	public OtherException(ErrorCode errorCode) {
 		super(errorCode.getMessage());
 		this.errorCode = errorCode;
 	}

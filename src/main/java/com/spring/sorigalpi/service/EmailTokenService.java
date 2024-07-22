@@ -8,8 +8,8 @@ import javax.mail.MessagingException;
 import org.springframework.stereotype.Service;
 
 import com.spring.sorigalpi.entity.EmailToken;
-import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
+import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.repository.EmailTokenRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -38,9 +38,9 @@ public class EmailTokenService {
 		return emailToken.getEmailTokenId();    // 인증 메일 전송 시 토큰 반환한다.
 	}
 
-	public EmailToken findByEmailTokenIdIdAndExpiredDateAfterAndExpired(String emailTokenId) throws BaseException { // 유효한 이메일 인증 토큰을 가져온다.
+	public EmailToken findByEmailTokenIdIdAndExpiredDateAfterAndExpired(String emailTokenId) throws OtherException { // 유효한 이메일 인증 토큰을 가져온다.
 		Optional<EmailToken> emailToken = emailTokenRepository.findByEmailTokenIdAndExpiredDateAfterAndExpired(emailTokenId, LocalDateTime.now(), false);
 
-		return emailToken.orElseThrow(() -> new BaseException(ErrorCode.TOKEN_NOT_FOUND));
+		return emailToken.orElseThrow(() -> new OtherException(ErrorCode.TOKEN_NOT_FOUND));
 	}
 }

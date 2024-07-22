@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.spring.sorigalpi.entity.Member;
-import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
+import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -52,22 +52,22 @@ public class JwtProvider {
 	// 토큰 검증하기
 	// 토큰 만료 시간이 지났는지 확인한다.
 
-		public Member validToken(String jwtToken) throws BaseException {
+		public Member validToken(String jwtToken) throws OtherException {
 		    String email = JWT.require(this.getSign())
 		            .build().verify(jwtToken).getClaim("email").asString();
 
 		    if (email == null) {
-		        throw new BaseException(ErrorCode.INVALID_TOKEN);
+		        throw new OtherException(ErrorCode.INVALID_TOKEN);
 		    }
 
 		    Date expiresAt = JWT.require(this.getSign()).acceptExpiresAt(EXPIRE_TIME).build().verify(jwtToken)
 		            .getExpiresAt();
 		    if (!this.validExpiredTime(expiresAt)) {
-		        throw new BaseException(ErrorCode.EXPIRED_TOKEN);
+		        throw new OtherException(ErrorCode.EXPIRED_TOKEN);
 		    }
 
 		    return memberRepository.findByEmail(email)
-		            .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+		            .orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
 		}
 
 	// 토큰의 만료 시간을 검증한다.
