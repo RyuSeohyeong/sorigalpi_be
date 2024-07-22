@@ -1,6 +1,7 @@
 package com.spring.sorigalpi.service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -36,4 +37,17 @@ public class RecentViewBookService {
 		
 	}
 	
+	public void deleteBookById(RecentViewBookDTO dto) { //동화책 ID로 삭제
+		
+		UUID bookId = dto.getBookId();
+		RecentViewBook bookInfo = recentViewBookRepository.findByBookId(bookId);
+		
+		if (bookInfo != null) {
+			recentViewBookRepository.delete(bookInfo);
+		}else {
+			
+		}
+		
+		
+	}
 }
