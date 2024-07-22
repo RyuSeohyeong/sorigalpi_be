@@ -38,11 +38,14 @@ public class MemberDto {
 
 	@ApiModelProperty(value = "활동 상태", example = "ACTIVE, QUIT", required = true)
 	private Status status;
+	
+	@ApiModelProperty(value = "이메일 인증 여부", example = "0,1", required = true)
+	private boolean emailVerified;
 
 	// Entity 클래스인 Member에 객체를 주입하여 Entity 클래스를 반환하는 메소드
 	public Member toEntity() {
 		return Member.builder().memberId(memberId).email(email).pwd(pwd).nickName(nickName).profileImg(profileImg)
-				.intro(intro).role(role).status(status).build();
+				.intro(intro).role(role).status(status).emailVerified(emailVerified).build();
 	}
 	
 	@Getter
