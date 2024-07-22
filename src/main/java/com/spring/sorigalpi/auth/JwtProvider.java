@@ -23,7 +23,7 @@ public class JwtProvider {
 
 	private final MemberRepository memberRepository;
 
-	static Long EXPIRE_TIME = 60L * 60L * 1000L; // 토큰 만료 시간 (1시간)
+	static Long EXPIRE_TIME = 60L * 60L * 1000L * 12; // 토큰 만료 시간: 하루
 
 	@Value("${jwt.secret}")
 	private String secretKey;
