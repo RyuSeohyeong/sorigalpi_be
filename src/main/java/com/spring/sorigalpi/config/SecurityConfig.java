@@ -55,8 +55,8 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 		 http
-	        .cors().disable()
-	        .csrf()
+		 	.csrf().disable() // Cross Site Request Forgery 사이트간 요청 위조 disable 처리
+	        .cors() //Cross Origin Resource Sharing 다른 출처 (Protocol + Host) 자원 공유 able 처리 (서버의 위치를 찾아가기 위해)
 	        .and()
 	        .sessionManagement()
 	            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
