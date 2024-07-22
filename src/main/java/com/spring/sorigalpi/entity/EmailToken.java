@@ -10,13 +10,10 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@ApiModel(value = "이메일 인증")
 @Table(name = "t_emailtoken")
 @Entity
 @Getter
@@ -28,19 +25,15 @@ public class EmailToken {
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-	@ApiModelProperty(value = "이메일 토큰 아이디", example = "abc-def", required = true)
 	@Column(name = "emailTokenId")
 	private String emailTokenId;
 
-	@ApiModelProperty(value = "사용자 고유 아이디", example = "ghi-jkl", required = true)
 	@Column(name = "memberId")
 	private String memberId;
 
-	@ApiModelProperty(value = "만료 여부", example = "0/1", required = true)
 	@Column(name = "expired")
 	private boolean expired;
 
-	@ApiModelProperty(value = "이메일 토큰 만료 기간", example = "YYYY-MM-NN 00:00:00.000", required = true)
 	@Column(name = "expiredDate")
 	private LocalDateTime expiredDate;
 

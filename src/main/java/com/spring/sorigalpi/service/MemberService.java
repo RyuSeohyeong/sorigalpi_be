@@ -7,7 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +17,7 @@ import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.base.BaseResponseStatus;
 import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.dto.MemberDto;
-import com.spring.sorigalpi.dto.MemberDto.PwdDto;
+
 import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
@@ -72,8 +72,9 @@ public class MemberService extends Base {
 	}
 
 	@Transactional
-	public String updateMember(String memberId, MemberDto memberDto) { // 사용자 정보 변경 메소드
+	public String updateMember(MemberDto memberDto) { // 사용자 정보 변경 메소드
 		// findById 메소드를 통해 값을 가져오면서 해당 값은 영속성을 가진다.
+
 		Member member = memberRepository.findById(memberId)
 				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
 

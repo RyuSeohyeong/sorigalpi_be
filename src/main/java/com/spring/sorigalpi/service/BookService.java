@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.BookDTO;
@@ -51,6 +52,7 @@ public class BookService extends Base{
 	}
 	
 	public String createBook(BookDTO bookDTO) { //동화책 생성
+		
 		bookDTO.setBookId(createUUID());
 		
 		if(bookDTO.getBlind() == null) {
@@ -68,12 +70,12 @@ public class BookService extends Base{
 		bookRepository.delete(bookInfo);
 		
 	}
-	
+	@Transactional
 	public void updateBook(BookDTO bookDTO) {
 		Book bookInfo = bookRepository.findByBookId(bookDTO.getBookId());
 		System.out.println(bookInfo.getCreDate());
 		
-		
+																							
 		bookRepository.save(bookDTO.toEntity());
 	}
 	
