@@ -1,25 +1,26 @@
 package com.spring.sorigalpi.base;
 
-import org.springframework.http.HttpStatus;
-
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 public class BaseResponse<T> {
-	private T data;
+	
+	private boolean isSuccess;
+	
+	private int code;
+	
 	private String message;
-	private int status;
+	
+	private T data;
 
-	public BaseResponse(T data) {
-		this.data = data;
-		this.message = "Success";
-		this.status = HttpStatus.OK.value();
-	}
-
-	public BaseResponse(String message, int status) {
-		this.message = message;
-		this.status = status;
-	}
+@Builder
+public BaseResponse(boolean isSuccess, int code, String message, T data) {
+	this.isSuccess = isSuccess;
+	this.code = code;
+	this.message = message;
+	this.data = data;
+}
 }

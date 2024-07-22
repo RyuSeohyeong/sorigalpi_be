@@ -14,13 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.sorigalpi.auth.JwtProvider;
 import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.base.Base;
+import com.spring.sorigalpi.base.BaseResponseStatus;
+import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.dto.MemberDto;
 
 import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
-import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
+import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,7 @@ public class MemberService extends Base {
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
 	@Transactional
-	public Member createMember(MemberDto memberDto) { // 사용자 추가 메소드
+	public Member createMember(MemberDto memberDto) throws BaseException { // 사용자 추가 메소드
 
 		String email = memberDto.getEmail();
 		
@@ -50,6 +52,7 @@ public class MemberService extends Base {
 		memberDto.setRole("ROLE_USER");
 		memberDto.setStatus(Status.ACTIVE);
 		memberDto.setMemberId(createRandomUuId());
+		memberDto.setEmailVerified(true);
 		;
 
 		Member member = memberDto.toEntity();
@@ -59,7 +62,7 @@ public class MemberService extends Base {
 		
 	    } else {
 	    	
-	    	throw new BaseException(ErrorCode.MEMBER_EXISTED);
+	    	throw new OtherException(ErrorCode.MEMBER_EXISTED);
 	}
 	    
 }
@@ -71,8 +74,9 @@ public class MemberService extends Base {
 	@Transactional
 	public String updateMember(MemberDto memberDto) { // 사용자 정보 변경 메소드
 		// findById 메소드를 통해 값을 가져오면서 해당 값은 영속성을 가진다.
-		Member member = memberRepository.findById(memberDto.getMemberId())
-				.orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
 
 		// 변경할 비밀번호 암호화하여 저장
 		String updatePwd = pwdEncoder.encode(memberDto.getPwd());
@@ -90,7 +94,7 @@ public class MemberService extends Base {
 	@Transactional
 	public String deleteMember(String memberId) { // 사용자 삭제 메소드
 		memberRepository.findById(memberId).orElseThrow(() -> {
-			return new BaseException(ErrorCode.MEMBER_NOT_FOUND);
+			return new OtherException(ErrorCode.MEMBER_NOT_FOUND);
 		});
 
 		memberRepository.deleteById(memberId);
@@ -104,10 +108,10 @@ public class MemberService extends Base {
 		
 	    // 이메일 인증 여부 확인
 	    Member member = memberRepository.findByEmail(email)
-	        .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+	        .orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
 
 	    if (!member.isEmailVerified()) {
-	        throw new BaseException(ErrorCode.EMAIL_NOT_VERIFID);
+	        throw new OtherException(ErrorCode.EMAIL_NOT_VERIFID);
 	    }
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, pwd);
@@ -124,19 +128,19 @@ public class MemberService extends Base {
 			return "로그인하였습니다. " + jwtProvider.generateJwtToken(authenticatedMemberId, authenticatedEmail);
 		}
 
-		throw new BaseException(ErrorCode.NO_AUTHORIZED);
+		throw new OtherException(ErrorCode.NO_AUTHORIZED);
 	}
 
 	public Member findMember(String email) {
 		Member member = memberRepository.findByEmail(email)
-				.orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
 
 		return member;
 	}
 
 	public String updatePwd(String email, MemberDto.PwdDto requestDto) {
 		Member member = memberRepository.findByEmail(email)
-				.orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
 		
 		requestDto.setPwd(pwdEncoder.encode(requestDto.getPwd()));
 		member.updatePwd(requestDto);

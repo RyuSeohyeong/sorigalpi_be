@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.auth.PrincipalDetails;
+import com.spring.sorigalpi.base.BaseResponse;
+import com.spring.sorigalpi.base.BaseResponseService;
+import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.entity.Member;
-import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
+import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.service.EmailTokenService;
 import com.spring.sorigalpi.service.MemberService;
 
@@ -41,7 +44,8 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
-	private final EmailTokenService emailTokenService;
+	//private final EmailTokenService emailTokenService;
+	private final BaseResponseService baseResponseService;
 
 	@ApiOperation(
 	        value = "사용자 회원가입",
@@ -53,13 +57,17 @@ public class MemberController {
             paramType = "body",
             defaultValue = "None")
 	@PostMapping("/signUp")
-	public String createMember(@RequestBody MemberDto memberDto) throws MessagingException {
+	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) {
 
-		memberService.createMember(memberDto);
-		// emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
+		try {
+			memberService.createMember(memberDto);
+	//emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
+		return baseResponseService.responseSuccess(memberDto);
+
 		
-		return "회원 가입이 완료되었습니다.";
-		
+		} catch (BaseException e) {
+			return baseResponseService.responseFail(e.status);
+		}
 	}
 
 	@ApiOperation(
@@ -85,15 +93,6 @@ public class MemberController {
 		return (List<Member>) memberService.listMembers();
 	}
 
-
-	// 이 경로로 모든 것을 바꾸게 하지 않고 어떤 정보를 변경할지에 따라 경로를 다르게 설정하는 게 좋지 않을까요
-	// 프로필을 변경할 때는 PutMapping("/profile")로 해서 원래 유저 정보에서 nickName과 intro, profileImg부분만 바꾼다든지...
-	// 패스워드 변경 때는 PutMapping("/password")라는 경로로 해서 password부분만 바꾸는 코드 짠다든지...
-
-	// 현재 코드로는 프로필 변경 때 password와 이메일도 다시 설정하고, password 변경 때에 프로필과 이메일을 다시 설정합니다.
-	// 설정값이 하나라도 null이라면 에러가 납니다. 모두 DB에서 필수값이기 때문에...
-	// 그렇기 때문에 이대로 한다면 굳이 프론트에서 목적과 상관없는 정보까지 MemberDTO에 담아서 주거나, 혹은 백에서 프론트가 준 값 중에 null이 있는지 하나하나 다 체크해야 합니다(아래의 if코드가 그겁니다).
-	// 그렇게 해도 굴러가긴 하겠지만? 굳이? 그럴 필요는? 없지 않나? 싶은? 쓸모없는 정보 주면 보안적으로 좋지 않기도 하고? password를 암호화할 때 CPU가 메모리 냠냠하는데? 굳이? 간식 줘서 CPU 살찌울 필요는 없지 않나?
 	@ApiOperation(
 	        value = "사용자 정보 변경",
 	        notes = "사용자의 ID를 통해 정보를 변경한다.")
@@ -165,7 +164,7 @@ public class MemberController {
 	        sb.append("\n");
 	    } else {
 	        // PrincipalDetails가 null인 경우에 대한 예외 처리
-	        throw new BaseException(ErrorCode.INVALID_TOKEN);
+	        throw new OtherException(ErrorCode.INVALID_TOKEN);
 	    }
 		sb.append("\n"); // \n 줄바꿈
 		if (authentication != null) {
@@ -174,7 +173,7 @@ public class MemberController {
 	        sb.append("\n");
 	    } else {
 	        // Authentication이 null인 경우에 대한 예외 처리
-	        throw new BaseException(ErrorCode.NO_AUTHORIZED);
+	        throw new OtherException(ErrorCode.NO_AUTHORIZED);
 	    }
 
 		return sb.toString();

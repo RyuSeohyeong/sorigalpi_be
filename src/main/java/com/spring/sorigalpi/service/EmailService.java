@@ -6,10 +6,11 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.entity.EmailToken;
 import com.spring.sorigalpi.entity.Member;
-import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
+import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class EmailService {
 			member.emailVerified();
 			return true;
 		} else {
-			throw new BaseException(ErrorCode.TOKEN_NOT_FOUND);
+			throw new OtherException(ErrorCode.TOKEN_NOT_FOUND);
 		}
 	}
 }
