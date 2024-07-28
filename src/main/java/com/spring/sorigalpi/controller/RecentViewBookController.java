@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.sorigalpi.base.BaseResponse;
+import com.spring.sorigalpi.base.BaseResponseService;
 import com.spring.sorigalpi.controller.BookController.BasicResponse;
 import com.spring.sorigalpi.dto.RecentViewBookDTO;
 import com.spring.sorigalpi.service.RecentViewBookService;
@@ -27,16 +29,18 @@ public class RecentViewBookController {
 	
 	@Autowired
 	private RecentViewBookService recentViewBookService;
+	@Autowired
+	private BaseResponseService baseResponseService;
 	
 	@ApiOperation(
 			value = "최근 본 동화 테이블의 모든 정보 조회",
 			notes = "최근 본 동화 테이블의 모든 정보를 불러오는 API") 
 	@ApiResponse(code = 200, message = "성공")
 	@GetMapping("/getAllRecentViewBook") //최근 본 동화 목록 불러오기
-	public ResponseEntity<BasicResponse> allRecentViewBookList(){
+	public BaseResponse<Object> allRecentViewBookList(){
 		String reMessage;
 		List<RecentViewBookDTO> dtoList = recentViewBookService.getAllRecentViewBookList();
-		
+		/*
 		if (dtoList.size() <= 0) {
 			reMessage = "최근 본 동화 없음";
 		}else {
@@ -49,7 +53,8 @@ public class RecentViewBookController {
 				.message(reMessage)
 				.result(new ArrayList<>(dtoList))
 				.count(dtoList.size()).build();
-		return new ResponseEntity<>(basiceResponse, HttpStatus.OK);
+		*/
+		return baseResponseService.responseSuccess(dtoList);
 	}
 	
 	@ApiOperation(
@@ -57,7 +62,7 @@ public class RecentViewBookController {
 			notes = "최근 본 동화 추가 API") 
 	@ApiResponse(code = 200, message = "성공")
 	@PostMapping("/createReadRecentBook") //최근 본 동화 추가
-	public ResponseEntity<BasicResponse> createBook(@RequestBody RecentViewBookDTO dto){
+	public BaseResponse<Object> createBook(@RequestBody RecentViewBookDTO dto){
 		
 		RecentViewBookDTO RVBdto = recentViewBookService.createReadRecentBook(dto);
 		
@@ -68,7 +73,7 @@ public class RecentViewBookController {
 					
 					.build();
 
-		return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+		return baseResponseService.responseSuccess();
 	}
 	
 }

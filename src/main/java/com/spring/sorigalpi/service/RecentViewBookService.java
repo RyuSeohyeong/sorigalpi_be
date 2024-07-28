@@ -18,6 +18,7 @@ public class RecentViewBookService {
 	@Autowired
 	private RecentViewBookRepository recentViewBookRepository;
 	
+	
 	public List<RecentViewBookDTO> getAllRecentViewBookList() { // 최근 본 동화 테이블 모든 정보 가져오기
 		
 		List<RecentViewBook> entityList = recentViewBookRepository.findAll();

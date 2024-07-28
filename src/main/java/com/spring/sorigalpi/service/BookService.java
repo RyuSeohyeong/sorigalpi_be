@@ -30,11 +30,11 @@ public class BookService extends Base{
 		return bookDTOList;
 	}
 	
-	public Book findByBookId(BookDTO bookDTO) { //동화책 id로 찾기
+	public BookDTO findByBookId(BookDTO bookDTO) { //동화책 id로 찾기
 		
 		UUID bookId = bookDTO.getBookId(); 
 
-		Book bookInfo = bookRepository.findByBookId(bookId);
+		BookDTO bookInfo = bookRepository.findByBookId(bookId).toDTO();
 		
 		return  bookInfo;
 		
