@@ -52,16 +52,12 @@ public class BookController {
 	public BaseResponse<Object> allBookList(){
 		
 		List<BookDTO> bookList = bookService.getAllBook();
-		return baseResponseService.responseSuccess(bookList);
-		
-/*
-BasicResponse basicResponse =  BasicResponse.builder()
-											.code(HttpStatus.OK.value())
-											.httpStatus(HttpStatus.OK)
-											.message("전체 사용자 조회 성공")
-											.result(new ArrayList<>(bookList))
-											.count(bookList.size()).build();
-*/
+		if (bookList.size() != 0) {
+			return baseResponseService.responseSuccess(bookList);
+		}else {
+			return baseResponseService.responseSuccess("정보 없음");
+		}
+			
 	}
 	
 	@ApiOperation(
@@ -94,21 +90,14 @@ BasicResponse basicResponse =  BasicResponse.builder()
 			notes = "동화책 id로 하나 삭제") 
 	@ApiResponse(code = 200, message = "성공")
 	@DeleteMapping("/deleteBookById") //동화책 Id로 삭제
-	public BaseResponse<Object> deleteBook(@RequestBody BookDTO bookDTO){
-		String result;	
-			
-				bookService.deleteBookById(bookDTO);
-				result="삭제성공";
-				return baseResponseService.responseSuccess(result);
-
-			/*
+	public BaseResponse<Object> deleteBook(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody BookDTO bookDTO){
 		
-			BasicResponse basicResponse =  BasicResponse.builder()
-					.code(HttpStatus.OK.value())
-					.httpStatus(HttpStatus.OK)
-					.message(result)
-					.build();
-		*/
+		String result;	
+		
+		String memberId = principalDetails.getMember().getMemberId(); //로그인 되어 있는 사람 식별번호 
+		result = bookService.deleteBookById(memberId, bookDTO);
+				
+		return baseResponseService.responseSuccess(result);
 		
 	}
 	
@@ -127,8 +116,10 @@ BasicResponse basicResponse =  BasicResponse.builder()
 	public BaseResponse<Object> searchOneBook(@RequestBody BookDTO bookDTO){ //동화책 id로 검색
 		
 		BookDTO resultDTO =  bookService.findByBookId(bookDTO);
-		
-		return baseResponseService.responseSuccess(resultDTO);
+		if(resultDTO == null) {
+			return baseResponseService.responseSuccess("검색 결과 없음");	
+		}
+			return baseResponseService.responseSuccess(resultDTO);
 	}
 	
 	@ApiOperation(
@@ -138,16 +129,11 @@ BasicResponse basicResponse =  BasicResponse.builder()
 	public BaseResponse<Object> searchByBookName(@PathVariable String bookName) { //동화책 제목으로 검색
 		
 		List<BookDTO> bookList = bookService.findByBookName(bookName);
-		
-		/*
-		BasicResponse basicResponse =  BasicResponse.builder()
-				.code(HttpStatus.OK.value())
-				.httpStatus(HttpStatus.OK)
-				.message("책 제목으로 조회 성공")
-				.result(new ArrayList<>(bookList))
-				.count(bookList.size()).build();
-		*/
-		return baseResponseService.responseSuccess(bookList);
+		if(bookList.size() != 0) {
+			return baseResponseService.responseSuccess(bookList);
+		}else {
+			return baseResponseService.responseSuccess("검색 결과 없음");
+		}
 		
 	}
 	

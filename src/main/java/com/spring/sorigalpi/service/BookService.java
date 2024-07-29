@@ -62,13 +62,21 @@ public class BookService extends Base{
 		return bookRepository.save(bookDTO.toEntity()).getBookId().toString();
 	}
 	
-	public void deleteBookById(BookDTO bookDTO) { //동화책 ID로 삭제
+	public String deleteBookById(String memberId, BookDTO bookDTO) { //동화책 ID로 삭제
 		
 		String result;
 		UUID bookId = bookDTO.getBookId();
 		Book bookInfo = bookRepository.findByBookId(bookId);
-		bookRepository.delete(bookInfo);
 		
+		String checkMemberId = bookInfo.getMemberId();
+		
+		if (checkMemberId == memberId) {
+			bookRepository.delete(bookInfo);
+			result = "삭제 성공";
+		}else {
+			result = "삭제 불가 사용자 정보 다름";
+		}
+		return result;
 	}
 	@Transactional
 	public void updateBook(BookDTO bookDTO) {

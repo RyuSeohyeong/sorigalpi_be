@@ -27,7 +27,7 @@ public enum BaseResponseStatus {
 	EXPIRED_TOKEN(false, 1009, "만료된 토큰입니다.");
 	
 	//------------------------------------------------//
-
+	
 
 	private boolean isSuccess;
 	private String message;
