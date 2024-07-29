@@ -72,6 +72,10 @@ public class Member extends Base {
 		this.profileImg = profileImg;
 		this.intro = intro;
 	}
+	
+	public void updateNewPwd(String pwd) {
+		this.pwd = pwd;
+	}
 
 	public List<String> getRolesList() {
 		if (this.role.length() > 0) {

@@ -147,4 +147,17 @@ public class MemberService extends Base {
 		return "비밀번호가 변경되었습니다.";
 	}
 
+	@Transactional
+	public String updateNewPwd(MemberDto memberDto,String memberId) {
+
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
+
+		// 변경할 비밀번호 암호화하여 저장
+		String updatePwd = pwdEncoder.encode(memberDto.getPwd());
+		
+		// 값 변경
+		member.updateNewPwd(updatePwd);
+		return "새로운 비밀번호로 변경되었습니다.";
+	}
 }

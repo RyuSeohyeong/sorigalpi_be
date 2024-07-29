@@ -118,13 +118,7 @@ public class MemberController {
 		if (memberDto.getProfileImg() == null) {
 			memberDto.setProfileImg(principalDetails.getMember().getProfileImg());
 		}
-		if(memberDto.getEmail() == null) {
-			memberDto.setEmail(principalDetails.getMember().getEmail());
-		}
-		if(memberDto.getPwd() == null) {
-			memberDto.setPwd(principalDetails.getMember().getPwd());
-		}
-		return memberService.updateMember(memberDto);
+		return memberService.updateMember(memberDto, memberId);
 	}
 
 	@ApiOperation(
@@ -178,5 +172,18 @@ public class MemberController {
 
 		return sb.toString();
 
+	}
+	
+	@PutMapping("/info/newPwd")
+	public String updateNewPwd(@AuthenticationPrincipal PrincipalDetails principalDetails,
+			@RequestBody MemberDto memberDto) {
+		String memberId = principalDetails.getMember().getMemberId();
+		memberDto.setMemberId(memberId);
+		
+		if(memberDto.getPwd() == null) {
+			memberDto.setPwd(principalDetails.getMember().getPwd());
+		}
+		
+		return memberService.updateNewPwd(memberDto, memberId);
 	}
 }
