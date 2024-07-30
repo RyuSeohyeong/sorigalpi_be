@@ -63,17 +63,18 @@ public class Member extends Base {
 	@Column(name = "emailVerified")
 	private boolean emailVerified;
 
-	public void updateMember(String email, String pwd, String nickName, String profileImg,
+	public void updateMember(String nickName, String profileImg,
 			String intro) { /*
 							 * 사용자 정보 수정 메소드 - JPA에서 영속성 컨텍스트 유지하기를 제공하는데 이 상태에서 해당 데이터 값을 변경하면 자동으로 변경사항이
 							 * DB에 저장된다. 즉 데이터만 변경하면 알아서 변경되므로 수정 메소드를 만들어서 구현함
 							 */
-
-		this.email = email;
-		this.pwd = pwd;
 		this.nickName = nickName;
 		this.profileImg = profileImg;
 		this.intro = intro;
+	}
+	
+	public void updateNewPwd(String pwd) {
+		this.pwd = pwd;
 	}
 
 	public List<String> getRolesList() {

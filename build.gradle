@@ -55,6 +55,10 @@ dependencies {
 	// Spring Context Support
 	implementation 'org.springframework:spring-context-support:5.3.9'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	
+	// 객체를 JSON으로 직렬화할 때 특정 필드가 null일 경우 JSON응답에 포함되지 않게 하는 의존성
+	// JRE 버전 이슈로 주석 처리
+	// implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 	}
 
 tasks.named('bootBuildImage') {

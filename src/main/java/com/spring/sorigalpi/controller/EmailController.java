@@ -18,6 +18,8 @@ import com.spring.sorigalpi.service.EmailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 /*
@@ -43,15 +45,14 @@ public class EmailController {
             dataType = "string",
             paramType = "query",
             defaultValue = "None")
+            	@ApiResponses({
+	        @ApiResponse(code = 200, message = "이메일 인증 성공"),
+	        @ApiResponse(code = 401, message = "권한 없음")})
 	@GetMapping("/confirmEmail") // 이메일 인증 확인
-	public BaseResponse<Object> confirmEmail(@Valid @RequestParam String token) { // 인증 메일 전송 시 전달된 토큰을 받아온다.
-		try {
-			boolean result = emailService.verifyEmail(token);
-			return new BaseResponse<>(result);
-		} catch (SecondException exception) {
-			return new baseResponseService.responseFail(exception.status);
-		}
-	}
+	public BaseResponse<Object> confirmEmail(@Valid @RequestParam String token) throws BaseException{ // 인증 메일 전송 시 전달된 토큰을 받아온다.
+			emailService.verifyEmail(token);
+			return baseResponseService.responseSuccess();
+		
 }
+}*/
 
-*/
