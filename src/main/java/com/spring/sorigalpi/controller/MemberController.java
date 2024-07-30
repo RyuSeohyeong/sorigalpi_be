@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.base.BaseResponse;
 import com.spring.sorigalpi.base.BaseResponseService;
+import com.spring.sorigalpi.base.ListResponse;
+import com.spring.sorigalpi.base.SingleResponse;
 import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
@@ -57,19 +58,14 @@ public class MemberController {
             paramType = "body",
             defaultValue = "None")
 	@PostMapping("/signUp")
-	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) {
+	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) throws BaseException{
 
-		try {
+	
 			memberService.createMember(memberDto);
 	//emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
 		return baseResponseService.responseSuccess(memberDto);
-
-		
-		} catch (BaseException e) {
-			return baseResponseService.responseFail(e.status);
-		}
 	}
-
+	
 	@ApiOperation(
 	        value = "사용자 로그인",
 	        notes = "사용자가 이메일과 비밀번호를 입력하여 로그인한다.")
@@ -79,18 +75,26 @@ public class MemberController {
             required = true,
             paramType = "body",
             defaultValue = "None")
+	
+
 	@PostMapping("/login")
 	public String login(@RequestBody MemberLoginDto memberLoginDto) {
-
-		return memberService.login(memberLoginDto);
+		 return memberService.login(memberLoginDto);
 	}
+	
 
 	@ApiOperation(
 	        value = "사용자 조회",
 	        notes = "[관리자] 사용자들의 목록을 전체 조회한다.")
 	@GetMapping("/listMembers")
-	public List<Member> listeMembers() {
-		return (List<Member>) memberService.listMembers();
+	public ListResponse<Member> listMembers() {
+	    List<Member> members = memberService.listMembers();
+	    System.out.println("Members: " + members);
+	    ListResponse<Member> response = baseResponseService.getListResponse(members);
+	    System.out.println("Response: " + response);
+
+	    	return baseResponseService.getListResponse(members);
+
 	}
 
 	@ApiOperation(
@@ -105,8 +109,8 @@ public class MemberController {
                 paramType = "body",
                 defaultValue = "None")})
 	@PutMapping("/info")
-	public String updateMember(@AuthenticationPrincipal PrincipalDetails principalDetails,
-			@RequestBody MemberDto memberDto) {
+	public BaseResponse<Object> updateMember(@AuthenticationPrincipal PrincipalDetails principalDetails,
+			@RequestBody MemberDto memberDto) throws BaseException {
 		String memberId = principalDetails.getMember().getMemberId();
 		memberDto.setMemberId(memberId);
 		if(memberDto.getNickName() == null) {
@@ -118,16 +122,22 @@ public class MemberController {
 		if (memberDto.getProfileImg() == null) {
 			memberDto.setProfileImg(principalDetails.getMember().getProfileImg());
 		}
-		return memberService.updateMember(memberDto, memberId);
+		
+		 memberService.updateMember(memberDto, memberId);
+		return baseResponseService.responseSuccess();
+		 
 	}
 
 	@ApiOperation(
 	        value = "사용자 탈퇴",
 	        notes = "사용자의 ID를 통해 탈퇴한다.")
 	@DeleteMapping("/info")
-	public String deleteMember(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+	public BaseResponse<Object> deleteMember(@AuthenticationPrincipal PrincipalDetails principalDetails) throws BaseException {
+		
 		String memberId = principalDetails.getMember().getMemberId();
-		return memberService.deleteMember(memberId);
+		memberService.deleteMember(memberId);
+		
+		return baseResponseService.responseSuccess();
 	}
 
 	@ApiOperation(
@@ -141,8 +151,9 @@ public class MemberController {
                paramType = "path",
                defaultValue = "None")
 	@GetMapping("/find/email/{email}")
-	public Member findMember(@PathVariable String email) {
-		return memberService.findMember(email);
+	public SingleResponse<Member> findMember(@PathVariable String email) throws BaseException {
+		
+		return baseResponseService.getSingleResponse(memberService.findMember(email));
 	}
 
 	@ApiOperation(
@@ -175,8 +186,8 @@ public class MemberController {
 	}
 	
 	@PutMapping("/info/newPwd")
-	public String updateNewPwd(@AuthenticationPrincipal PrincipalDetails principalDetails,
-			@RequestBody MemberDto memberDto) {
+	public BaseResponse<Object> updateNewPwd(@AuthenticationPrincipal PrincipalDetails principalDetails,
+			@RequestBody MemberDto memberDto) throws BaseException {
 		String memberId = principalDetails.getMember().getMemberId();
 		memberDto.setMemberId(memberId);
 		
@@ -184,6 +195,7 @@ public class MemberController {
 			memberDto.setPwd(principalDetails.getMember().getPwd());
 		}
 		
-		return memberService.updateNewPwd(memberDto, memberId);
+		return baseResponseService.responseSuccess(memberService.updateNewPwd(memberDto, memberId));
+				
 	}
 }
