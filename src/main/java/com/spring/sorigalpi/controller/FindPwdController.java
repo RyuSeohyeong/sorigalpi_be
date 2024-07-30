@@ -27,6 +27,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -52,6 +54,10 @@ public class FindPwdController {
             dataType = "string",
             paramType = "body",
             defaultValue = "None")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "사용자 비밀번호 재설정 메일 전송 성공"),
+        @ApiResponse(code = 401, message = "권한 없음"),
+        @ApiResponse(code = 500, message = "내부 서버 오류")})
 	@GetMapping("/member/find/pwd") // 비밀번호 찾기 재설정 메일 보내기
 	public BaseResponse<Object> findPwdUrl(@RequestBody VerifyCodeDto verifyCodeDto) throws MessagingException, BaseException {
 
@@ -84,6 +90,10 @@ public class FindPwdController {
                 dataType = "string",
                 paramType = "path",
                 defaultValue = "None")})
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "비밀번호 재설정 성공"),
+        @ApiResponse(code = 401, message = "권한 없음"),
+        @ApiResponse(code = 500, message = "내부 서버 오류")})
 	@PostMapping("/member/find/pwd/{code}") // 비밀번호 재설정하기
 	public BaseResponse<Object> changePwd(@RequestBody MemberDto.PwdDto requestDto, @PathVariable String code) throws BaseException{
 

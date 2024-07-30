@@ -34,6 +34,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -57,13 +59,17 @@ public class MemberController {
             required = true,
             paramType = "body",
             defaultValue = "None")
+	@ApiResponses({
+	        @ApiResponse(code = 200, message = "회원가입 성공"),
+	        @ApiResponse(code = 401, message = "권한 없음")})
 	@PostMapping("/signUp")
 	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) throws BaseException{
 
 	
 			memberService.createMember(memberDto);
 	//emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
-		return baseResponseService.responseSuccess(memberDto);
+
+			return baseResponseService.responseSuccess(memberDto);
 	}
 	
 	@ApiOperation(
@@ -75,8 +81,6 @@ public class MemberController {
             required = true,
             paramType = "body",
             defaultValue = "None")
-	
-
 	@PostMapping("/login")
 	public String login(@RequestBody MemberLoginDto memberLoginDto) {
 		 return memberService.login(memberLoginDto);
@@ -86,12 +90,13 @@ public class MemberController {
 	@ApiOperation(
 	        value = "사용자 조회",
 	        notes = "[관리자] 사용자들의 목록을 전체 조회한다.")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "회원 목록 조회 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
 	@GetMapping("/listMembers")
 	public ListResponse<Member> listMembers() {
-	    List<Member> members = memberService.listMembers();
-	    System.out.println("Members: " + members);
-	    ListResponse<Member> response = baseResponseService.getListResponse(members);
-	    System.out.println("Response: " + response);
+	   
+		List<Member> members = memberService.listMembers();
 
 	    	return baseResponseService.getListResponse(members);
 
@@ -108,6 +113,9 @@ public class MemberController {
                 dataType = "string",
                 paramType = "body",
                 defaultValue = "None")})
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "회원 정보 수정 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
 	@PutMapping("/info")
 	public BaseResponse<Object> updateMember(@AuthenticationPrincipal PrincipalDetails principalDetails,
 			@RequestBody MemberDto memberDto) throws BaseException {
@@ -131,6 +139,9 @@ public class MemberController {
 	@ApiOperation(
 	        value = "사용자 탈퇴",
 	        notes = "사용자의 ID를 통해 탈퇴한다.")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "사용자 탈퇴 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
 	@DeleteMapping("/info")
 	public BaseResponse<Object> deleteMember(@AuthenticationPrincipal PrincipalDetails principalDetails) throws BaseException {
 		
@@ -150,6 +161,9 @@ public class MemberController {
                dataType = "string",
                paramType = "path",
                defaultValue = "None")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "사용자 이메일 찾기 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
 	@GetMapping("/find/email/{email}")
 	public SingleResponse<Member> findMember(@PathVariable String email) throws BaseException {
 		
@@ -185,6 +199,18 @@ public class MemberController {
 
 	}
 	
+	@ApiOperation(
+	        value = "사용자 비밀번호 변경",
+	        notes = "사용자가 비밀번호 변경 탭을 누른 후 변경한다.")
+    @ApiImplicitParam(
+            name = "MemberDto",
+            value = "사용자 비밀번호 변경",
+            required = true,
+            paramType = "body",
+            defaultValue = "None")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "사용자 비밀번호 변경 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
 	@PutMapping("/info/newPwd")
 	public BaseResponse<Object> updateNewPwd(@AuthenticationPrincipal PrincipalDetails principalDetails,
 			@RequestBody MemberDto memberDto) throws BaseException {
