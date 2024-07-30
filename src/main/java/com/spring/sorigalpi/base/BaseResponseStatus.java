@@ -1,5 +1,7 @@
 package com.spring.sorigalpi.base;
 
+import java.util.List;
+
 import lombok.Getter;
 
 @Getter
@@ -24,14 +26,17 @@ public enum BaseResponseStatus {
 	
 	// 403 Forbidden 권한이 없습니다.
 	NO_AUTHORIZED(false, 1008, "권한이 없습니다."),
-	EXPIRED_TOKEN(false, 1009, "만료된 토큰입니다.");
+	EXPIRED_TOKEN(false, 1009, "만료된 토큰입니다."),
+	
+	//500 내부 서버 오류
+	INTERNAL_SERVER_ERROR(false, 1010, "내부 서버에 오류가 발생했습니다.");
 	
 	//------------------------------------------------//
-
 
 	private boolean isSuccess;
 	private String message;
 	private int code;
+	private List<?> dataList;
 	
 	BaseResponseStatus(boolean isSuccess, int code, String message){
 		this.isSuccess = isSuccess;
@@ -39,12 +44,10 @@ public enum BaseResponseStatus {
 		this.message = message;
 	}
 	
-	 public int getCode() {
-	        return code;
-	    }
-
-	    public String getMessage() {
-	        return message;
-	    }
-
+    BaseResponseStatus(boolean isSuccess, int code, String message, List<?> dataList) {
+        this.isSuccess = isSuccess;
+        this.code = code;
+        this.message = message;
+        this.dataList = dataList;
+    }
 }
