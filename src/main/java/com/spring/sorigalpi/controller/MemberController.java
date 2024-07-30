@@ -57,6 +57,7 @@ public class MemberController {
             name = "MemberDto",
             value = "사용자 정보",
             required = true,
+            dataType = "string",
             paramType = "body",
             defaultValue = "None")
 	@ApiResponses({
@@ -206,6 +207,7 @@ public class MemberController {
             name = "MemberDto",
             value = "사용자 비밀번호 변경",
             required = true,
+            dataType = "string",
             paramType = "body",
             defaultValue = "None")
 	@ApiResponses({
