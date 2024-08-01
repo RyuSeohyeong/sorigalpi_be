@@ -14,11 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.sorigalpi.auth.JwtProvider;
 import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.base.Base;
-import com.spring.sorigalpi.base.BaseResponseStatus;
 import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.dto.MemberDto;
 
 import com.spring.sorigalpi.dto.MemberLoginDto;
+import com.spring.sorigalpi.dto.TokenDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 import com.spring.sorigalpi.exception.ErrorCode;
@@ -45,17 +45,19 @@ public class MemberService extends Base {
 		
 	    if (!findmember.isPresent()) {
 	      
+	    	
 		// memberDto에서 pwd값을 가져와 BCryptPasswordEncoder로 회원의 비밀번호를 암호화한다.
 		String encodedPassword = pwdEncoder.encode(memberDto.getPwd());
 
+		memberDto.setMemberId(createRandomUuId());
 		memberDto.setPwd(encodedPassword);
 		memberDto.setRole("ROLE_USER");
 		memberDto.setStatus(Status.ACTIVE);
-		memberDto.setMemberId(createRandomUuId());
 		memberDto.setEmailVerified(true);
-		;
+		
 
 		Member member = memberDto.toEntity();
+		
 		memberRepository.save(member);
 
 		return member;
@@ -101,11 +103,11 @@ public class MemberService extends Base {
 		return "탈퇴가 완료되었습니다.";
 	}
 
-	public String login(MemberLoginDto memberLoginDto) {
+	public TokenDto login(MemberLoginDto memberLoginDto) {
 
-		String email = memberLoginDto.getEmail();
-		String pwd = memberLoginDto.getPwd();
-		
+	    String email = memberLoginDto.getEmail();
+	    String pwd = memberLoginDto.getPwd();
+
 	    // 이메일 인증 여부 확인
 	    Member member = memberRepository.findByEmail(email)
 	        .orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
@@ -114,21 +116,24 @@ public class MemberService extends Base {
 	        throw new OtherException(ErrorCode.EMAIL_NOT_VERIFID);
 	    }
 
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, pwd);
+	    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, pwd);
 
-		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+	    Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-		// + JWT 인증이 완료된 객체이면,
-		if (authentication.isAuthenticated()) {
-			PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+	    // + JWT 인증이 완료된 객체이면,
+	    if (authentication.isAuthenticated()) {
+	        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
-			String authenticatedMemberId = principalDetails.getMember().getMemberId();
-			String authenticatedEmail = principalDetails.getMember().getEmail();
+	        String authenticatedMemberId = principalDetails.getMember().getMemberId();
+	        String authenticatedEmail = principalDetails.getMember().getEmail();
 
-			return "로그인하였습니다. " + jwtProvider.generateJwtToken(authenticatedMemberId, authenticatedEmail);
-		}
+	        // TokenDto 객체 생성
+	        TokenDto tokenDto = jwtProvider.generateJwtTokenDto(authenticatedMemberId, authenticatedEmail);
 
-		throw new OtherException(ErrorCode.NO_AUTHORIZED);
+	        return tokenDto;
+	    }
+
+	    throw new OtherException(ErrorCode.NO_AUTHORIZED);
 	}
 
 	public Member findMember(String email) {

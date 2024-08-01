@@ -24,6 +24,7 @@ import com.spring.sorigalpi.base.SingleResponse;
 import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
+import com.spring.sorigalpi.dto.TokenDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.exception.ErrorCode;
 import com.spring.sorigalpi.exception.OtherException;
@@ -47,7 +48,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
-	//private final EmailTokenService emailTokenService;
+	private final EmailTokenService emailTokenService;
 	private final BaseResponseService baseResponseService;
 
 	@ApiOperation(
@@ -64,11 +65,10 @@ public class MemberController {
 	        @ApiResponse(code = 200, message = "회원가입 성공"),
 	        @ApiResponse(code = 401, message = "권한 없음")})
 	@PostMapping("/signUp")
-	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) throws BaseException{
+	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) throws BaseException, MessagingException{
 
-	
 			memberService.createMember(memberDto);
-	//emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
+	        //mailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
 
 			return baseResponseService.responseSuccess(memberDto);
 	}
@@ -82,12 +82,15 @@ public class MemberController {
             required = true,
             paramType = "body",
             defaultValue = "None")
-	@PostMapping("/login")
-	public String login(@RequestBody MemberLoginDto memberLoginDto) {
-		 return memberService.login(memberLoginDto);
-	}
-	
 
+    @PostMapping("/login")
+    public BaseResponse<Object> login(@RequestBody MemberLoginDto memberLoginDto) {
+			
+		TokenDto tokenDto = memberService.login(memberLoginDto);
+        
+			return baseResponseService.responseSuccess(tokenDto);
+    }
+	
 	@ApiOperation(
 	        value = "사용자 조회",
 	        notes = "[관리자] 사용자들의 목록을 전체 조회한다.")
@@ -99,7 +102,7 @@ public class MemberController {
 	   
 		List<Member> members = memberService.listMembers();
 
-	    	return baseResponseService.getListResponse(members);
+	    return baseResponseService.getListResponse(members);
 
 	}
 
@@ -132,8 +135,7 @@ public class MemberController {
 			memberDto.setProfileImg(principalDetails.getMember().getProfileImg());
 		}
 		
-		 memberService.updateMember(memberDto, memberId);
-		return baseResponseService.responseSuccess();
+		return baseResponseService.responseSuccess( memberService.updateMember(memberDto, memberId));
 		 
 	}
 
@@ -147,9 +149,8 @@ public class MemberController {
 	public BaseResponse<Object> deleteMember(@AuthenticationPrincipal PrincipalDetails principalDetails) throws BaseException {
 		
 		String memberId = principalDetails.getMember().getMemberId();
-		memberService.deleteMember(memberId);
 		
-		return baseResponseService.responseSuccess();
+		return baseResponseService.responseSuccess(memberService.deleteMember(memberId));
 	}
 
 	@ApiOperation(
