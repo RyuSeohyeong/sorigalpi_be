@@ -66,7 +66,7 @@ public class FindPwdController {
 		boolean success = pwdMailService.pwdCheckEmail(verifyCode);
 		
 		if (success) {
-			return baseResponseService.responseSuccess();
+			return baseResponseService.responseSuccess(success);
 		} else {
 			return baseResponseService.responseFail(BaseResponseStatus.INTERNAL_SERVER_ERROR);
 		}
