@@ -22,7 +22,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
-/*
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Validated
 @RestController
@@ -50,9 +49,8 @@ public class EmailController {
 	        @ApiResponse(code = 401, message = "권한 없음")})
 	@GetMapping("/confirmEmail") // 이메일 인증 확인
 	public BaseResponse<Object> confirmEmail(@Valid @RequestParam String token) throws BaseException{ // 인증 메일 전송 시 전달된 토큰을 받아온다.
+		
 			return baseResponseService.responseSuccess(emailService.verifyEmail(token));
 		
 }
 }
-*/
-
