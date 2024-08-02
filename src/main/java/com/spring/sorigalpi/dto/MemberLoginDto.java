@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 
 public class MemberLoginDto {
 
-	@Schema(description = "이메일", example = "abc@efg.com")
+	@Schema(description = "이메일", example = "abc@efg.com", required = true)
 	private String email;
 	
-	@Schema(description = "비밀번호", example = "abced123!")
+	@Schema(description = "비밀번호", example = "abced123!", required = true)
 	private String pwd;
 	
 }
