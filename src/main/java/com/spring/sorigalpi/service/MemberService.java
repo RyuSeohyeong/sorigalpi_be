@@ -3,6 +3,8 @@ package com.spring.sorigalpi.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -35,9 +37,10 @@ public class MemberService extends Base {
 	private final BCryptPasswordEncoder pwdEncoder;
 	private final JwtProvider jwtProvider;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
+	private final EmailTokenService emailTokenService;
 
 	@Transactional
-	public Member createMember(MemberDto memberDto) throws BaseException { // 사용자 추가 메소드
+	public Member createMember(MemberDto memberDto) throws BaseException,  MessagingException  { // 사용자 추가 메소드
 
 		String email = memberDto.getEmail();
 		
@@ -55,10 +58,12 @@ public class MemberService extends Base {
 		memberDto.setStatus(Status.ACTIVE);
 		memberDto.setEmailVerified(true);
 		
-
 		Member member = memberDto.toEntity();
 		
 		memberRepository.save(member);
+		
+		//회원가입을 위한 이메일 토큰 생성 및 메일 발송
+        emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
 
 		return member;
 		
@@ -66,27 +71,24 @@ public class MemberService extends Base {
 	    	
 	    	throw new OtherException(ErrorCode.MEMBER_EXISTED);
 	}
-	    
+	       
 }
-
+	
 	public List<Member> listMembers() { // 사용자 조회 메소드
 		return memberRepository.findAll();
 	}
 
 	@Transactional
 	public String updateMember(MemberDto memberDto,String memberId) { // 사용자 정보 변경 메소드
-		// findById 메소드를 통해 값을 가져오면서 해당 값은 영속성을 가진다.
-
-		Member member = memberRepository.findById(memberId)
-				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
-
-		// 변경할 비밀번호 암호화하여 저장
-		// String updatePwd = pwdEncoder.encode(memberDto.getPwd());
 		
+		// findById 메소드를 통해 값을 가져오면서 해당 값은 영속성을 가진다.
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));	
 		
 		// 값 변경
 		member.updateMember(memberDto.getNickName(),
 				memberDto.getProfileImg(), memberDto.getIntro());
+		
 		return memberDto.getNickName() + "님 정보가 변경되었습니다.";
 		// 트랜잭션이 끝나면서 변경된 값을 테이블에 적용
 		// update기능에서 JPA영속성 때문에 DB에 쿼리를 없애는 부분이 없으며, Entity의 값만 변경하면 별도로 update쿼리가
@@ -100,6 +102,7 @@ public class MemberService extends Base {
 		});
 
 		memberRepository.deleteById(memberId);
+		
 		return "탈퇴가 완료되었습니다.";
 	}
 
@@ -149,7 +152,9 @@ public class MemberService extends Base {
 		
 		requestDto.setPwd(pwdEncoder.encode(requestDto.getPwd()));
 		member.updatePwd(requestDto);
+		
 		return "비밀번호가 변경되었습니다.";
+		
 	}
 
 	@Transactional
@@ -163,6 +168,7 @@ public class MemberService extends Base {
 		
 		// 값 변경
 		member.updateNewPwd(updatePwd);
+		
 		return "새로운 비밀번호로 변경되었습니다.";
 	}
 }
