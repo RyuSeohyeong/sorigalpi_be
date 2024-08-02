@@ -68,7 +68,6 @@ public class MemberController {
 	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) throws BaseException, MessagingException{
 
 			memberService.createMember(memberDto);
-	        //mailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
 
 			return baseResponseService.responseSuccess(memberDto);
 	}
