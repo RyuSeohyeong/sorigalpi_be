@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.base.BaseResponse;
-import com.spring.sorigalpi.exception.BaseException;
+import com.spring.sorigalpi.base.BaseResponseService;
+import com.spring.sorigalpi.base.BaseException;
+// import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.service.EmailService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -28,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class EmailController {
 
 	private final EmailService emailService;
+	private final BaseResponseService baseResponseService;
 
 	@ApiOperation(
 	        value = "사용자 이메일 인증 확인",
@@ -39,13 +44,13 @@ public class EmailController {
             dataType = "string",
             paramType = "query",
             defaultValue = "None")
+            	@ApiResponses({
+	        @ApiResponse(code = 200, message = "이메일 인증 성공"),
+	        @ApiResponse(code = 401, message = "권한 없음")})
 	@GetMapping("/confirmEmail") // 이메일 인증 확인
-	public BaseResponse<Boolean> confirmEmail(@Valid @RequestParam String token) { // 인증 메일 전송 시 전달된 토큰을 받아온다.
-		try {
-			boolean result = emailService.verifyEmail(token);
-			return new BaseResponse<>(result);
-		} catch (BaseException exception) {
-			return new BaseResponse<>(exception.getMessage(), exception.getHttpStatus().value());
-		}
-	}
+	public BaseResponse<Object> confirmEmail(@Valid @RequestParam String token) throws BaseException{ // 인증 메일 전송 시 전달된 토큰을 받아온다.
+		
+			return baseResponseService.responseSuccess(emailService.verifyEmail(token));
+		
+}
 }

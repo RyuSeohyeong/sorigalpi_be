@@ -14,8 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.spring.sorigalpi.entity.Member;
-import com.spring.sorigalpi.exception.BaseException;
-import com.spring.sorigalpi.exception.ErrorCode;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 

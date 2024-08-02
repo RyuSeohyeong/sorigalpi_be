@@ -2,12 +2,11 @@ package com.spring.sorigalpi.auth;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.spring.sorigalpi.entity.Member;
-import com.spring.sorigalpi.exception.BaseException;
 import com.spring.sorigalpi.exception.ErrorCode;
+import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class PrincipalDetailsService implements UserDetailsService { // UserDeta
 	@Override
 	public UserDetails loadUserByUsername(String email) {
 		Member member = memberRepository.findByEmail(email)
-				.orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
 		return new PrincipalDetails(member);
 	}
 
