@@ -26,6 +26,7 @@ import com.spring.sorigalpi.entity.Book;
 import com.spring.sorigalpi.service.BookService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -73,15 +74,6 @@ public class BookController {
 		return baseResponseService.responseSuccess(bookId);
 		
 		
-/*		
-		BasicResponse basicResponse =  BasicResponse.builder()
-					.code(HttpStatus.OK.value())
-					.httpStatus(HttpStatus.OK)
-					.message("책 생성 성공")
-					.resultStr(bookId)
-					.build();
-*/
-		
 	}
 	
 	
@@ -101,13 +93,6 @@ public class BookController {
 		
 	}
 	
-	@ApiOperation(
-			value = "동화책 테이블 정보 수정 API",
-			notes = "동화책 수정") 
-	@PutMapping("/updateBook")
-	public String updateBook() { //동화책 수정
-		return "return";
-	}
 	
 	@ApiOperation(
 			value = "동화책 ID로 조회 API",
@@ -136,10 +121,14 @@ public class BookController {
 		}
 		
 	}
-	
-	@PutMapping
-	public void updateBook(@RequestBody BookDTO bookDTO){//동화 수정
-		bookService.updateBook(bookDTO);
+	@ApiOperation(
+			value = "동화책 정보 수정 API",
+			notes = "책설명, 공개여부, 녹음 가능여부 변경")
+	@PutMapping("/updateBook")
+	public BaseResponse<Object> updateBook(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody BookDTO bookDTO){//동화 수정
+		String memberId = principalDetails.getMember().getMemberId();
+		String result = bookService.updateBook(memberId, bookDTO);
+		return baseResponseService.responseSuccess(result);
 	}
 	
 	@Data

@@ -78,13 +78,22 @@ public class BookService extends Base{
 		}
 		return result;
 	}
+	
 	@Transactional
-	public void updateBook(BookDTO bookDTO) {
+	public String updateBook(String memberId, BookDTO bookDTO) {
 		Book bookInfo = bookRepository.findByBookId(bookDTO.getBookId());
-		System.out.println(bookInfo.getCreDate());
-		
-																							
-		bookRepository.save(bookDTO.toEntity());
+		if (bookInfo != null) {
+			String checkMemberId = bookInfo.getMemberId();
+			
+			if(checkMemberId.equals(memberId)) {
+				bookInfo.updateBook(bookDTO.getBookName(), bookDTO.getPageNum(), bookDTO.getStatus(), bookDTO.getBlind(), bookDTO.getRecordable(), bookDTO.getInfo());
+				return "수정 완료";
+			}else {
+				return "사용자 정보 불일치";
+			}
+		}else {
+			return "해당하는 책 정보 없음";
+		}																			
 	}
 	
 
