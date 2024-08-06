@@ -37,7 +37,7 @@ public class BaseResponseServiceImpl implements BaseResponseService {
 				.message(status.getMessage())
 				.build();
 	}
-	
+	/*
 	// List형 성공 (전달하는 데이터O)
 	public <T> ListResponse<Member> getListResponse(List<T> dataList){
 		ListResponse listResponse = new ListResponse();
@@ -77,4 +77,5 @@ public class BaseResponseServiceImpl implements BaseResponseService {
 		
 		return singleResponse;
 	}
+	*/
 }

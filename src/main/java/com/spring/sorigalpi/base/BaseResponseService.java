@@ -15,10 +15,11 @@ public interface BaseResponseService {
 	// 실패
 	<T> BaseResponse<Object> responseFail(BaseResponseStatus status);
 	
+	/*
 	// List형 성공 (전달하는 데이터O)
 	<T> ListResponse<Member> getListResponse(List<T> dataList);
 
 	// 한개의 정보만 조회하기 성공 (전달하는 데이터O)
 	<T> SingleResponse<Member> getSingleResponse(T data);
-	
+	*/
 }
