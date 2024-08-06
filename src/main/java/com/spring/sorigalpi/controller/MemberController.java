@@ -14,15 +14,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.base.BaseResponse;
 import com.spring.sorigalpi.base.BaseResponseService;
+import com.spring.sorigalpi.base.ListResponse;
+import com.spring.sorigalpi.base.SingleResponse;
 import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
+import com.spring.sorigalpi.dto.TokenDto;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.exception.ErrorCode;
 import com.spring.sorigalpi.exception.OtherException;
@@ -33,6 +35,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -44,7 +48,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
-	//private final EmailTokenService emailTokenService;
+	private final EmailTokenService emailTokenService;
 	private final BaseResponseService baseResponseService;
 
 	@ApiOperation(
@@ -54,22 +58,20 @@ public class MemberController {
             name = "MemberDto",
             value = "사용자 정보",
             required = true,
+            dataType = "string",
             paramType = "body",
             defaultValue = "None")
+	@ApiResponses({
+	        @ApiResponse(code = 200, message = "회원가입 성공"),
+	        @ApiResponse(code = 401, message = "권한 없음")})
 	@PostMapping("/signUp")
-	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) {
+	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) throws BaseException, MessagingException{
 
-		try {
 			memberService.createMember(memberDto);
-	//emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
-		return baseResponseService.responseSuccess(memberDto);
 
-		
-		} catch (BaseException e) {
-			return baseResponseService.responseFail(e.status);
-		}
+			return baseResponseService.responseSuccess(memberDto);
 	}
-
+	
 	@ApiOperation(
 	        value = "사용자 로그인",
 	        notes = "사용자가 이메일과 비밀번호를 입력하여 로그인한다.")
@@ -79,18 +81,28 @@ public class MemberController {
             required = true,
             paramType = "body",
             defaultValue = "None")
-	@PostMapping("/login")
-	public String login(@RequestBody MemberLoginDto memberLoginDto) {
 
-		return memberService.login(memberLoginDto);
-	}
-
+    @PostMapping("/login")
+    public BaseResponse<Object> login(@RequestBody MemberLoginDto memberLoginDto) {
+			
+		TokenDto tokenDto = memberService.login(memberLoginDto);
+        
+			return baseResponseService.responseSuccess(tokenDto);
+    }
+	
 	@ApiOperation(
 	        value = "사용자 조회",
 	        notes = "[관리자] 사용자들의 목록을 전체 조회한다.")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "회원 목록 조회 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
 	@GetMapping("/listMembers")
-	public List<Member> listeMembers() {
-		return (List<Member>) memberService.listMembers();
+	public ListResponse<Member> listMembers() {
+	   
+		List<Member> members = memberService.listMembers();
+
+	    return baseResponseService.getListResponse(members);
+
 	}
 
 	@ApiOperation(
@@ -104,9 +116,12 @@ public class MemberController {
                 dataType = "string",
                 paramType = "body",
                 defaultValue = "None")})
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "회원 정보 수정 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
 	@PutMapping("/info")
-	public String updateMember(@AuthenticationPrincipal PrincipalDetails principalDetails,
-			@RequestBody MemberDto memberDto) {
+	public BaseResponse<Object> updateMember(@AuthenticationPrincipal PrincipalDetails principalDetails,
+			@RequestBody MemberDto memberDto) throws BaseException {
 		String memberId = principalDetails.getMember().getMemberId();
 		memberDto.setMemberId(memberId);
 		if(memberDto.getNickName() == null) {
@@ -118,22 +133,23 @@ public class MemberController {
 		if (memberDto.getProfileImg() == null) {
 			memberDto.setProfileImg(principalDetails.getMember().getProfileImg());
 		}
-		if(memberDto.getEmail() == null) {
-			memberDto.setEmail(principalDetails.getMember().getEmail());
-		}
-		if(memberDto.getPwd() == null) {
-			memberDto.setPwd(principalDetails.getMember().getPwd());
-		}
-		return memberService.updateMember(memberDto);
+		
+		return baseResponseService.responseSuccess( memberService.updateMember(memberDto, memberId));
+		 
 	}
 
 	@ApiOperation(
 	        value = "사용자 탈퇴",
 	        notes = "사용자의 ID를 통해 탈퇴한다.")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "사용자 탈퇴 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
 	@DeleteMapping("/info")
-	public String deleteMember(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+	public BaseResponse<Object> deleteMember(@AuthenticationPrincipal PrincipalDetails principalDetails) throws BaseException {
+		
 		String memberId = principalDetails.getMember().getMemberId();
-		return memberService.deleteMember(memberId);
+		
+		return baseResponseService.responseSuccess(memberService.deleteMember(memberId));
 	}
 
 	@ApiOperation(
@@ -146,9 +162,13 @@ public class MemberController {
                dataType = "string",
                paramType = "path",
                defaultValue = "None")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "사용자 이메일 찾기 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
 	@GetMapping("/find/email/{email}")
-	public Member findMember(@PathVariable String email) {
-		return memberService.findMember(email);
+	public SingleResponse<Member> findMember(@PathVariable String email) throws BaseException {
+		
+		return baseResponseService.getSingleResponse(memberService.findMember(email));
 	}
 
 	@ApiOperation(
@@ -178,5 +198,32 @@ public class MemberController {
 
 		return sb.toString();
 
+	}
+	
+	@ApiOperation(
+	        value = "사용자 비밀번호 변경",
+	        notes = "사용자가 비밀번호 변경 탭을 누른 후 변경한다.")
+    @ApiImplicitParam(
+            name = "MemberDto",
+            value = "사용자 비밀번호 변경",
+            required = true,
+            dataType = "string",
+            paramType = "body",
+            defaultValue = "None")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "사용자 비밀번호 변경 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
+	@PutMapping("/info/newPwd")
+	public BaseResponse<Object> updateNewPwd(@AuthenticationPrincipal PrincipalDetails principalDetails,
+			@RequestBody MemberDto memberDto) throws BaseException {
+		String memberId = principalDetails.getMember().getMemberId();
+		memberDto.setMemberId(memberId);
+		
+		if(memberDto.getPwd() == null) {
+			memberDto.setPwd(principalDetails.getMember().getPwd());
+		}
+		
+		return baseResponseService.responseSuccess(memberService.updateNewPwd(memberDto, memberId));
+				
 	}
 }

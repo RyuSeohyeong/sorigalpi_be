@@ -14,6 +14,6 @@ import lombok.Setter;
 
 public class VerifyCodeDto {
 
-	@Schema(description = "이메일", example = "abc@efg.com")
+	@Schema(description = "이메일", example = "abc@efg.com", required = true)
 	private String email;
 }

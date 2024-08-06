@@ -26,8 +26,20 @@ spring:
     username: email
     password: pwd
     properties:
-      mail.smtp.auth: true
-      mail.smtp.ssl.enable: true
+      mail:
+        smtp:
+          starttls:
+            enable: true
+#            required: true
+          auth: true
+#          connectiontimeout: 5000
+#          timeout: 5000
+#          writetimeout: 5000
+          ssl:
+            #trust: smtp.naver.com
+            enable: true
+            protocols: TLSv1.2
+     
    
    # 스웨거 스프링부트 버전2.6이후 생기는 오류를 해결해주는 설정    
   mvc:
