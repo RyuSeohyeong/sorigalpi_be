@@ -33,6 +33,7 @@ public enum BaseResponseStatus {
 	
 	//------------------------------------------------//
 
+
 	private boolean isSuccess;
 	private String message;
 	private int code;

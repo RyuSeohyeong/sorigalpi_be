@@ -30,11 +30,11 @@ public class BookService extends Base{
 		return bookDTOList;
 	}
 	
-	public Book findByBookId(BookDTO bookDTO) { //동화책 id로 찾기
+	public BookDTO findByBookId(BookDTO bookDTO) { //동화책 id로 찾기
 		
 		UUID bookId = bookDTO.getBookId(); 
 
-		Book bookInfo = bookRepository.findByBookId(bookId);
+		BookDTO bookInfo = bookRepository.findByBookId(bookId).toDTO();
 		
 		return  bookInfo;
 		
@@ -62,21 +62,38 @@ public class BookService extends Base{
 		return bookRepository.save(bookDTO.toEntity()).getBookId().toString();
 	}
 	
-	public void deleteBookById(BookDTO bookDTO) { //동화책 ID로 삭제
+	public String deleteBookById(String memberId, BookDTO bookDTO) { //동화책 ID로 삭제
 		
 		String result;
 		UUID bookId = bookDTO.getBookId();
 		Book bookInfo = bookRepository.findByBookId(bookId);
-		bookRepository.delete(bookInfo);
 		
+		String checkMemberId = bookInfo.getMemberId();
+		
+		if (checkMemberId == memberId) {
+			bookRepository.delete(bookInfo);
+			result = "삭제 성공";
+		}else {
+			result = "삭제 불가 사용자 정보 다름";
+		}
+		return result;
 	}
+	
 	@Transactional
-	public void updateBook(BookDTO bookDTO) {
+	public String updateBook(String memberId, BookDTO bookDTO) {
 		Book bookInfo = bookRepository.findByBookId(bookDTO.getBookId());
-		System.out.println(bookInfo.getCreDate());
-		
-																							
-		bookRepository.save(bookDTO.toEntity());
+		if (bookInfo != null) {
+			String checkMemberId = bookInfo.getMemberId();
+			
+			if(checkMemberId.equals(memberId)) {
+				bookInfo.updateBook(bookDTO.getBookName(), bookDTO.getPageNum(), bookDTO.getStatus(), bookDTO.getBlind(), bookDTO.getRecordable(), bookDTO.getInfo());
+				return "수정 완료";
+			}else {
+				return "사용자 정보 불일치";
+			}
+		}else {
+			return "해당하는 책 정보 없음";
+		}																			
 	}
 	
 
