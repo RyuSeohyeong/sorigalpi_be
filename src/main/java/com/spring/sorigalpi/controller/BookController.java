@@ -110,10 +110,10 @@ public class BookController {
 	@ApiOperation(
 			value = "동화책 제목으로 조회 API",
 			notes = "제목으로 모든 동화정보 리스트로 조회")
-	@GetMapping("/searchByBookName/{bookName}")
-	public BaseResponse<Object> searchByBookName(@PathVariable String bookName) { //동화책 제목으로 검색
+	@PostMapping("/searchByBookName")
+	public BaseResponse<Object> searchByBookName(@RequestBody BookDTO bookDTO) { //동화책 제목으로 검색
 		
-		List<BookDTO> bookList = bookService.findByBookName(bookName);
+		List<BookDTO> bookList = bookService.findByBookName(bookDTO.getBookName());
 		if(bookList.size() != 0) {
 			return baseResponseService.responseSuccess(bookList);
 		}else {
