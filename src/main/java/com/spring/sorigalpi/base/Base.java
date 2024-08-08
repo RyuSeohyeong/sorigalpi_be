@@ -1,5 +1,8 @@
 package com.spring.sorigalpi.base;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -23,6 +26,27 @@ public class Base { //중복되는 메소드들
 	
 	public UUID createUUID() {
 		return UUID.randomUUID();
+	}
+	
+	public String createShortUuid() { //uuid -> 16진수 해시 값으로 변경
+		
+		String uuidString = UUID.randomUUID().toString();
+		byte[] uuidStringBytes = uuidString.getBytes(StandardCharsets.UTF_8);
+		byte[] hashBytes;
+		
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			hashBytes = messageDigest.digest(uuidStringBytes);
+		}catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<4; i++) {
+			sb.append(String.format("%02x",hashBytes[i]));
+		}
+		
+		return sb.toString();
 	}
 	
 	@CreatedDate //Entity가 생성되어 저장될 때 시간 저장
