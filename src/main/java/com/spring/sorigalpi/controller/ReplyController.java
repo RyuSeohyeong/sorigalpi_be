@@ -2,6 +2,7 @@ package com.spring.sorigalpi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,5 +53,16 @@ public class ReplyController {
 		return baseResponseService.responseSuccess(result);	
 	}
 	
-	
+	@ApiOperation(
+			value = "댓글 삭제 API",
+			notes = "댓글 식별번호 필요") 
+	@ApiResponse(code = 1000, message = "성공")
+	@DeleteMapping("/deleteComment") //댓글 삭제
+	public BaseResponse<Object> deleteComment(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody ReplyDTO replyDTO) {
+		
+		String memberId = principalDetails.getMember().getMemberId();
+		String result = replyService.deleteComment(replyDTO, memberId);
+		
+		return baseResponseService.responseSuccess(result);	
+	}
 }
