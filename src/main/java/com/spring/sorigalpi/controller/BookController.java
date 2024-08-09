@@ -1,16 +1,16 @@
 package com.spring.sorigalpi.controller;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.auth.PrincipalDetails;
-import com.spring.sorigalpi.base.BaseException;
+
 import com.spring.sorigalpi.base.BaseResponse;
 import com.spring.sorigalpi.base.BaseResponseService;
 import com.spring.sorigalpi.dto.BookDTO;
-import com.spring.sorigalpi.entity.Book;
+
 import com.spring.sorigalpi.service.BookService;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -53,6 +53,7 @@ public class BookController {
 	public BaseResponse<Object> allBookList(){
 		
 		List<BookDTO> bookList = bookService.getAllBook();
+		
 		if (bookList.size() != 0) {
 			return baseResponseService.responseSuccess(bookList);
 		}else {
@@ -101,9 +102,7 @@ public class BookController {
 	public BaseResponse<Object> searchOneBook(@RequestBody BookDTO bookDTO){ //동화책 id로 검색
 		
 		BookDTO resultDTO =  bookService.findByBookId(bookDTO);
-		if(resultDTO == null) {
-			return baseResponseService.responseSuccess("검색 결과 없음");	
-		}
+		
 			return baseResponseService.responseSuccess(resultDTO);
 	}
 	
@@ -114,8 +113,9 @@ public class BookController {
 	public BaseResponse<Object> searchByBookName(@RequestBody BookDTO bookDTO) { //동화책 제목으로 검색
 		
 		List<BookDTO> bookList = bookService.findByBookName(bookDTO.getBookName());
+		
 		if(bookList.size() != 0) {
-			return baseResponseService.responseSuccess(bookList);
+			return baseResponseService.responseSuccess(bookList);	
 		}else {
 			return baseResponseService.responseSuccess("검색 결과 없음");
 		}
@@ -126,26 +126,12 @@ public class BookController {
 			notes = "책설명, 공개여부, 녹음 가능여부 변경")
 	@PutMapping("/updateBook")
 	public BaseResponse<Object> updateBook(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody BookDTO bookDTO){//동화 수정
+		
 		String memberId = principalDetails.getMember().getMemberId();
 		String result = bookService.updateBook(memberId, bookDTO);
+		
 		return baseResponseService.responseSuccess(result);
 	}
-	
-	@Data
-	@Builder
-	@AllArgsConstructor
-	@NoArgsConstructor
-	@ApiModel(value = "응답용")
-	static class BasicResponse{ // response로 사용할 class
 		
-		private Integer code;
-		private HttpStatus httpStatus;
-		private String message;
-		private Integer count;
-		private List<Object> result;
-		private String resultStr;
-		
-	}
-	
 	
 }
