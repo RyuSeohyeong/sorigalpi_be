@@ -17,9 +17,16 @@ public class ReplyService extends Base{
 		String uuid =  createShortUuid();
 		
 		dto.setReplyNo(uuid);
-		Reply entity = dto.toEntity();
-		replyRepository.save(entity);
 		
-		return dto;	
+		return replyRepository.save(dto.toEntity()).toDTO();
 	}
+	
+	public ReplyDTO createReply2(ReplyDTO dto) { //답글 생성
+		String uuid = createShortUuid();
+		
+		dto.setReplyNo(uuid);
+		
+		return replyRepository.save(dto.toEntity()).toDTO();
+	}
+	
 }

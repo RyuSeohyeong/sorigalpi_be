@@ -29,7 +29,7 @@ public class ReplyController {
 	@ApiOperation(
 			value = "댓글 생성 API",
 			notes = "책고유Id, 댓글내용 필요") 
-	@ApiResponse(code = 200, message = "성공")
+	@ApiResponse(code = 1000, message = "성공")
 	@PostMapping("/createReply") //댓글 생성
 	public BaseResponse<Object> createReply(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody ReplyDTO replyDTO) {
 		
@@ -38,4 +38,19 @@ public class ReplyController {
 		
 		return baseResponseService.responseSuccess(result);	
 	}
+	
+	@ApiOperation(
+			value = "답글 생성 API",
+			notes = "부모 댓글 식별번호 ,책고유Id, 댓글내용 필요") 
+	@ApiResponse(code = 1000, message = "성공")
+	@PostMapping("/createReply2") //답글 생성
+	public BaseResponse<Object> createReply2(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody ReplyDTO replyDTO) {
+		
+		replyDTO.setMemberId(principalDetails.getMember().getMemberId());
+		ReplyDTO result = replyService.createReply2(replyDTO);
+		
+		return baseResponseService.responseSuccess(result);	
+	}
+	
+	
 }
