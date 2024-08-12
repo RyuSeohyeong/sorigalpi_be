@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.sorigalpi.base.BaseResponse;
 import com.spring.sorigalpi.base.BaseResponseService;
-import com.spring.sorigalpi.controller.BookController.BasicResponse;
 import com.spring.sorigalpi.dto.RecentViewBookDTO;
 import com.spring.sorigalpi.service.RecentViewBookService;
 
@@ -38,22 +37,8 @@ public class RecentViewBookController {
 	@ApiResponse(code = 200, message = "성공")
 	@GetMapping("/getAllRecentViewBook") //최근 본 동화 목록 불러오기
 	public BaseResponse<Object> allRecentViewBookList(){
-		String reMessage;
 		List<RecentViewBookDTO> dtoList = recentViewBookService.getAllRecentViewBookList();
-		/*
-		if (dtoList.size() <= 0) {
-			reMessage = "최근 본 동화 없음";
-		}else {
-			reMessage = "최근 본 동화 목록 조회 성공";
-		}
-		
-		BasicResponse basiceResponse = BasicResponse.builder()
-				.code(HttpStatus.OK.value())
-				.httpStatus(HttpStatus.OK)
-				.message(reMessage)
-				.result(new ArrayList<>(dtoList))
-				.count(dtoList.size()).build();
-		*/
+
 		return baseResponseService.responseSuccess(dtoList);
 	}
 	
@@ -65,15 +50,8 @@ public class RecentViewBookController {
 	public BaseResponse<Object> createBook(@RequestBody RecentViewBookDTO dto){
 		
 		RecentViewBookDTO RVBdto = recentViewBookService.createReadRecentBook(dto);
-		
-		BasicResponse basicResponse =  BasicResponse.builder()
-					.code(HttpStatus.OK.value())
-					.httpStatus(HttpStatus.OK)
-					.message("책 생성 성공")
-					
-					.build();
-
-		return baseResponseService.responseSuccess();
+	
+		return baseResponseService.responseSuccess(RVBdto);
 	}
 	
 }

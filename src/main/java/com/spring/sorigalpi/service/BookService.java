@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.BookDTO;
 import com.spring.sorigalpi.entity.Book;
+import com.spring.sorigalpi.exception.ErrorCode;
+import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.repository.BookRepository;
 
 
@@ -34,9 +36,10 @@ public class BookService extends Base{
 		
 		UUID bookId = bookDTO.getBookId(); 
 
-		BookDTO bookInfo = bookRepository.findByBookId(bookId).toDTO();
+		Book entity = bookRepository.findByBookId(bookId)
+				.orElseThrow(()-> new OtherException(ErrorCode.BOOK_NOT_FOUND));;
 		
-		return  bookInfo;
+		return  entity.toDTO();
 		
 	}
 	
@@ -66,12 +69,13 @@ public class BookService extends Base{
 		
 		String result;
 		UUID bookId = bookDTO.getBookId();
-		Book bookInfo = bookRepository.findByBookId(bookId);
+		Book entity = bookRepository.findByBookId(bookId)
+				.orElseThrow(()-> new OtherException(ErrorCode.BOOK_NOT_FOUND));
 		
-		String checkMemberId = bookInfo.getMemberId();
+		String checkMemberId = entity.getMemberId();
 		
-		if (checkMemberId == memberId) {
-			bookRepository.delete(bookInfo);
+		if (checkMemberId.equals(memberId)) {
+			bookRepository.delete(entity);
 			result = "삭제 성공";
 		}else {
 			result = "삭제 불가 사용자 정보 다름";
@@ -80,20 +84,19 @@ public class BookService extends Base{
 	}
 	
 	@Transactional
-	public String updateBook(String memberId, BookDTO bookDTO) {
-		Book bookInfo = bookRepository.findByBookId(bookDTO.getBookId());
-		if (bookInfo != null) {
+	public String updateBook(String memberId, BookDTO bookDTO) { //책수정
+		Book bookInfo = bookRepository.findByBookId(bookDTO.getBookId())
+				.orElseThrow(()-> new OtherException(ErrorCode.BOOK_NOT_FOUND));
+		
 			String checkMemberId = bookInfo.getMemberId();
 			
 			if(checkMemberId.equals(memberId)) {
 				bookInfo.updateBook(bookDTO.getBookName(), bookDTO.getPageNum(), bookDTO.getStatus(), bookDTO.getBlind(), bookDTO.getRecordable(), bookDTO.getInfo());
 				return "수정 완료";
 			}else {
-				return "사용자 정보 불일치";
+				return "수정 불가 사용자 정보 불일치";
 			}
-		}else {
-			return "해당하는 책 정보 없음";
-		}																			
+																		
 	}
 	
 
