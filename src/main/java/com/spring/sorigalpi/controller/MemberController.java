@@ -19,13 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.sorigalpi.auth.PrincipalDetails;
 import com.spring.sorigalpi.base.BaseResponse;
 import com.spring.sorigalpi.base.BaseResponseService;
-import com.spring.sorigalpi.base.ListResponse;
-import com.spring.sorigalpi.base.SingleResponse;
+//import com.spring.sorigalpi.base.ListResponse;
+//import com.spring.sorigalpi.base.SingleResponse;
 import com.spring.sorigalpi.base.BaseException;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.dto.MemberLoginDto;
 import com.spring.sorigalpi.dto.TokenDto;
-import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.exception.ErrorCode;
 import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.service.EmailTokenService;
@@ -97,11 +96,11 @@ public class MemberController {
         @ApiResponse(code = 200, message = "회원 목록 조회 성공"),
         @ApiResponse(code = 401, message = "권한 없음")})
 	@GetMapping("/listMembers")
-	public ListResponse<Member> listMembers() {
+	public BaseResponse<Object> listMembers() {
 	   
-		List<Member> members = memberService.listMembers();
+		List<MemberDto> memberList = memberService.listMembers();
 
-	    return baseResponseService.getListResponse(members);
+	    return baseResponseService.responseSuccess(memberList);
 
 	}
 
@@ -119,7 +118,7 @@ public class MemberController {
 	@ApiResponses({
         @ApiResponse(code = 200, message = "회원 정보 수정 성공"),
         @ApiResponse(code = 401, message = "권한 없음")})
-	@PutMapping("/info")
+	@PutMapping("/update")
 	public BaseResponse<Object> updateMember(@AuthenticationPrincipal PrincipalDetails principalDetails,
 			@RequestBody MemberDto memberDto) throws BaseException {
 		String memberId = principalDetails.getMember().getMemberId();
@@ -144,7 +143,7 @@ public class MemberController {
 	@ApiResponses({
         @ApiResponse(code = 200, message = "사용자 탈퇴 성공"),
         @ApiResponse(code = 401, message = "권한 없음")})
-	@DeleteMapping("/info")
+	@DeleteMapping
 	public BaseResponse<Object> deleteMember(@AuthenticationPrincipal PrincipalDetails principalDetails) throws BaseException {
 		
 		String memberId = principalDetails.getMember().getMemberId();
@@ -166,9 +165,9 @@ public class MemberController {
         @ApiResponse(code = 200, message = "사용자 이메일 찾기 성공"),
         @ApiResponse(code = 401, message = "권한 없음")})
 	@GetMapping("/find/email/{email}")
-	public SingleResponse<Member> findMember(@PathVariable String email) throws BaseException {
+	public BaseResponse<Object> findMember(@PathVariable String email) throws BaseException {
 		
-		return baseResponseService.getSingleResponse(memberService.findMember(email));
+		return baseResponseService.responseSuccess(memberService.findMember(email));
 	}
 
 	@ApiOperation(
@@ -213,15 +212,12 @@ public class MemberController {
 	@ApiResponses({
         @ApiResponse(code = 200, message = "사용자 비밀번호 변경 성공"),
         @ApiResponse(code = 401, message = "권한 없음")})
-	@PutMapping("/info/newPwd")
+	@PutMapping("/update/newPwd")
 	public BaseResponse<Object> updateNewPwd(@AuthenticationPrincipal PrincipalDetails principalDetails,
 			@RequestBody MemberDto memberDto) throws BaseException {
+		
 		String memberId = principalDetails.getMember().getMemberId();
 		memberDto.setMemberId(memberId);
-		
-		if(memberDto.getPwd() == null) {
-			memberDto.setPwd(principalDetails.getMember().getPwd());
-		}
 		
 		return baseResponseService.responseSuccess(memberService.updateNewPwd(memberDto, memberId));
 				

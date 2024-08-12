@@ -2,6 +2,7 @@ package com.spring.sorigalpi.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
@@ -56,7 +57,7 @@ public class MemberService extends Base {
 		memberDto.setPwd(encodedPassword);
 		memberDto.setRole("ROLE_USER");
 		memberDto.setStatus(Status.ACTIVE);
-		memberDto.setEmailVerified(true);
+		//memberDto.setEmailVerified(true);
 		
 		Member member = memberDto.toEntity();
 		
@@ -74,8 +75,12 @@ public class MemberService extends Base {
 	       
 }
 	
-	public List<Member> listMembers() { // 사용자 조회 메소드
-		return memberRepository.findAll();
+	public List<MemberDto> listMembers() { // 사용자 조회 메소드
+		List<Member> memberList = memberRepository.findAll();
+		List<MemberDto> memberDtoList = memberList.stream().map(Member::toDto).collect(Collectors.toList());
+		
+		
+		return memberDtoList;
 	}
 
 	@Transactional
