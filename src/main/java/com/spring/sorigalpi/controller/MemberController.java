@@ -159,15 +159,17 @@ public class MemberController {
                value = "이메일",
                required = true,
                dataType = "string",
-               paramType = "path",
+               paramType = "body",
                defaultValue = "None")
 	@ApiResponses({
         @ApiResponse(code = 200, message = "사용자 이메일 찾기 성공"),
         @ApiResponse(code = 401, message = "권한 없음")})
-	@GetMapping("/find/email/{email}")
-	public BaseResponse<Object> findMember(@PathVariable String email) throws BaseException {
+	@PostMapping("/find/email")
+	public BaseResponse<Object> findMember(@RequestBody MemberDto memberDto) throws BaseException {
 		
-		return baseResponseService.responseSuccess(memberService.findMember(email));
+		MemberDto memberInfo = memberService.findMember(memberDto);
+		
+		return baseResponseService.responseSuccess(memberService.findMember(memberInfo));
 	}
 
 	@ApiOperation(

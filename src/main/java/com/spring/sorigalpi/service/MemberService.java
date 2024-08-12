@@ -144,11 +144,15 @@ public class MemberService extends Base {
 	    throw new OtherException(ErrorCode.NO_AUTHORIZED);
 	}
 
-	public Member findMember(String email) {
+	public MemberDto findMember(MemberDto memberDto) {
+		
+		String email = memberDto.getEmail();		
+		
 		Member member = memberRepository.findByEmail(email)
-				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
-
-		return member;
+				.orElseThrow(()-> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
+	
+		return member.toDto(); 
+	
 	}
 
 	public String updatePwd(String email, MemberDto.PwdDto requestDto) {
