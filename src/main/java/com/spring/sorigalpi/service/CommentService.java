@@ -1,41 +1,39 @@
 package com.spring.sorigalpi.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.sorigalpi.base.Base;
-import com.spring.sorigalpi.dto.ReplyDTO;
-import com.spring.sorigalpi.entity.Reply;
+import com.spring.sorigalpi.dto.CommentDTO;
+import com.spring.sorigalpi.entity.Comment;
 import com.spring.sorigalpi.exception.ErrorCode;
 import com.spring.sorigalpi.exception.OtherException;
-import com.spring.sorigalpi.repository.ReplyRepository;
+import com.spring.sorigalpi.repository.CommentRepository;
 
-@Service("replyService")
-public class ReplyService extends Base{
+@Service("commentService")
+public class CommentService extends Base{
 	@Autowired
-	private ReplyRepository replyRepository;
+	private CommentRepository replyRepository;
 	
-	public ReplyDTO createReply(ReplyDTO dto) { //댓글 생성
+	public CommentDTO createReply(CommentDTO dto) { //댓글 생성
 		String uuid =  createShortUuid();
 		
-		dto.setReplyNo(uuid);
+		dto.setCommentNo(uuid);
 		
 		return replyRepository.save(dto.toEntity()).toDTO();
 	}
 	
-	public ReplyDTO createReply2(ReplyDTO dto) { //답글 생성
+	public CommentDTO createReply2(CommentDTO dto) { //답글 생성
 		String uuid = createShortUuid();
 		
-		dto.setReplyNo(uuid);
+		dto.setCommentNo(uuid);
 		
 		return replyRepository.save(dto.toEntity()).toDTO();
 	}
 	
-	public String deleteComment(ReplyDTO dto, String memberId) { //댓글 삭제
+	public String deleteComment(CommentDTO dto, String memberId) { //댓글 삭제
 		
-		Reply entity = replyRepository.findByReplyNo(dto.getReplyNo())
+		Comment entity = replyRepository.findByReplyNo(dto.getCommentNo())
 				.orElseThrow(()-> new OtherException(ErrorCode.COMMENT_NOT_FOUND));
 		
 		if(entity.getMemberId().equals(memberId)) {

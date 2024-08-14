@@ -12,7 +12,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 
-import com.spring.sorigalpi.dto.ReplyDTO;
+import com.spring.sorigalpi.dto.CommentDTO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,18 +23,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @ApiModel(value="댓글 정보")
-@Table(name = "t_reply")
+@Table(name = "t_comment")
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //기본 생성자 생성
 @AllArgsConstructor // 전체 필드에 대한 생성자
 @DynamicInsert //save시 null값 배제
-public class Reply {
+public class Comment {
 	
 	@Id
 	@ApiModelProperty(value = "댓글고유번호", required = true)
-	private String replyNo;
+	private String commentNo;
 	
 	@ApiModelProperty(value = "책고유Id", required = true)
 	@Type(type="uuid-char")
@@ -66,9 +66,9 @@ public class Reply {
 		this.blind = blind;
 	}
 	
-	public ReplyDTO toDTO() {
-		return ReplyDTO.builder()
-				.replyNo(replyNo)
+	public CommentDTO toDTO() {
+		return CommentDTO.builder()
+				.commentNo(commentNo)
 				.bookId(bookId)
 				.parentNo(parentNo)
 				.memberId(memberId)

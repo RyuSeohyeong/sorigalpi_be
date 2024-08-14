@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 
-import com.spring.sorigalpi.entity.Reply;
+import com.spring.sorigalpi.entity.Comment;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -21,9 +21,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ReplyDTO {
+public class CommentDTO {
 	@ApiModelProperty(value = "댓글고유번호", required = true)
-	private String replyNo;
+	private String commentNo;
 	
 	@ApiModelProperty(value = "책고유Id", required = true)
 	private UUID bookId;
@@ -44,9 +44,9 @@ public class ReplyDTO {
 	@ApiModelProperty(value = "댓글 신고 상태", example = "YES, NO", required = true)
 	private String blind;
 	
-	public Reply toEntity() {
-		return Reply.builder()
-				.replyNo(replyNo)
+	public Comment toEntity() {
+		return Comment.builder()
+				.commentNo(commentNo)
 				.bookId(bookId)
 				.parentNo(parentNo)
 				.memberId(memberId)
