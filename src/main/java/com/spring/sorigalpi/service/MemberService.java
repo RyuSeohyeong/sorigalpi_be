@@ -2,6 +2,7 @@ package com.spring.sorigalpi.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
@@ -56,7 +57,7 @@ public class MemberService extends Base {
 		memberDto.setPwd(encodedPassword);
 		memberDto.setRole("ROLE_USER");
 		memberDto.setStatus(Status.ACTIVE);
-		memberDto.setEmailVerified(true);
+		//memberDto.setEmailVerified(true);
 		
 		Member member = memberDto.toEntity();
 		
@@ -74,8 +75,12 @@ public class MemberService extends Base {
 	       
 }
 	
-	public List<Member> listMembers() { // 사용자 조회 메소드
-		return memberRepository.findAll();
+	public List<MemberDto> listMembers() { // 사용자 조회 메소드
+		List<Member> memberList = memberRepository.findAll();
+		List<MemberDto> memberDtoList = memberList.stream().map(Member::toDto).collect(Collectors.toList());
+		
+		
+		return memberDtoList;
 	}
 
 	@Transactional
@@ -139,11 +144,15 @@ public class MemberService extends Base {
 	    throw new OtherException(ErrorCode.NO_AUTHORIZED);
 	}
 
-	public Member findMember(String email) {
+	public MemberDto findMember(MemberDto memberDto) {
+		
+		String email = memberDto.getEmail();		
+		
 		Member member = memberRepository.findByEmail(email)
-				.orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
-
-		return member;
+				.orElseThrow(()-> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
+	
+		return member.toDto(); 
+	
 	}
 
 	public String updatePwd(String email, MemberDto.PwdDto requestDto) {

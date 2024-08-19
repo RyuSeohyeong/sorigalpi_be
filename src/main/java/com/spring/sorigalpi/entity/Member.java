@@ -93,4 +93,17 @@ public class Member extends Base {
 	public void updatePwd(MemberDto.PwdDto requestDto) {
 		this.pwd = requestDto.getPwd();
 	}
+	
+	public MemberDto toDto() {
+		return MemberDto.builder().memberId(memberId)
+				.email(email)
+				.pwd(pwd)
+				.nickName(nickName)
+				.profileImg(profileImg)
+				.intro(intro)
+				.role(role)
+				.status(status)
+				.emailVerified(emailVerified)
+				.build();
+	}
 }
