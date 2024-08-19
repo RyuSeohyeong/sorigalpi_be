@@ -58,7 +58,7 @@ public class Comment {
 	@ColumnDefault("NO") // default값 설정
 	private String blind;
 	
-	public void updateReplyContent(String content) { //댓글 수정
+	public void updateCommentContent(String content) { //댓글 수정
 		this.content = content;
 	}
 	
