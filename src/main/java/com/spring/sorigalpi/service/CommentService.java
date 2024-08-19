@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.CommentDTO;
-import com.spring.sorigalpi.entity.Book;
 import com.spring.sorigalpi.entity.Comment;
 import com.spring.sorigalpi.exception.ErrorCode;
 import com.spring.sorigalpi.exception.OtherException;
@@ -38,7 +37,7 @@ public class CommentService extends Base{
 	
 	public String deleteComment(CommentDTO dto, String memberId) { //댓글 삭제
 		
-		Comment entity = commentRepository.findByReplyNo(dto.getCommentNo())
+		Comment entity = commentRepository.findByCommentNo(dto.getCommentNo())
 				.orElseThrow(()-> new OtherException(ErrorCode.COMMENT_NOT_FOUND));
 		
 		if(entity.getMemberId().equals(memberId)) {
@@ -52,7 +51,7 @@ public class CommentService extends Base{
 	@Transactional
 	public String updateComment(CommentDTO dto, String memberId) { //댓글 수정
 		
-		Comment entity = commentRepository.findByReplyNo(dto.getCommentNo())
+		Comment entity = commentRepository.findByCommentNo(dto.getCommentNo())
 				.orElseThrow(()-> new OtherException(ErrorCode.COMMENT_NOT_FOUND));
 		
 		String checkMemberId = entity.getMemberId();
@@ -75,4 +74,12 @@ public class CommentService extends Base{
 		return dtoList;
 	}
 	
+	public List<CommentDTO> getReply(CommentDTO dto){ //답글 목록
+		
+		List<Comment> commentList = commentRepository.findReplyByParentNo(dto.getParentNo());
+	
+		List<CommentDTO> dtoList = commentList.stream().map(Comment::toDTO).collect(Collectors.toList());
+			
+		return dtoList;
+	}
 }

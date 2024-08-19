@@ -98,11 +98,18 @@ public class CommentController {
 			value = "답글 불러오기 API",
 			notes = "답글 불러오기") 
 	@ApiResponse(code = 1000, message = "성공")
-	@PostMapping("/AllComment") 
-	public BaseResponse<Object> getReply() {
+	@PostMapping("/getReply") 
+	public BaseResponse<Object> getReply(@RequestBody CommentDTO dto) {
 		
-		List<CommentDTO> dtoList = commentService.getAllComment();
+		List<CommentDTO> dtoList = commentService.getReply(dto);
 		
-		return baseResponseService.responseSuccess(dtoList);	
+		if (dtoList.size()!=0) {
+			return baseResponseService.responseSuccess(dtoList);
+		}else {
+			return baseResponseService.responseSuccess("No reply");
+		}
+			
 	}
+	
+	
 }
