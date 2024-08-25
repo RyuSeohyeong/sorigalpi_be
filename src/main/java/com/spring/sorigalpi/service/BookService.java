@@ -99,5 +99,14 @@ public class BookService extends Base{
 																		
 	}
 	
+	public List<BookDTO> searchByMemberId (String memberId){
+		
+		List<Book> entityList = bookRepository.findAllByMemberId(memberId);
+		
+		List<BookDTO> dtoList = entityList.stream().map(Book::toDTO).collect(Collectors.toList()); //List<Book> -> List<BookDTO>
+		
+		return dtoList;
+		
+	}
 
 }

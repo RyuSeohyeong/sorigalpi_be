@@ -117,7 +117,7 @@ public class BookController {
 		if(bookList.size() != 0) {
 			return baseResponseService.responseSuccess(bookList);	
 		}else {
-			return baseResponseService.responseSuccess("검색 결과 없음");
+			return baseResponseService.responseSuccess("Empty List");
 		}
 		
 	}
@@ -133,5 +133,20 @@ public class BookController {
 		return baseResponseService.responseSuccess(result);
 	}
 		
+	@ApiOperation(
+			value = "memberId로 책 모두 검색",
+			notes = "내 책장 조회")
+	@PostMapping("/searchByMemberId")
+	public BaseResponse<Object> searchByMemberId(@AuthenticationPrincipal PrincipalDetails principalDetails){//내 책장 조회
+		
+		String memberId = principalDetails.getMember().getMemberId();
+		List<BookDTO> dtoList = bookService.searchByMemberId(memberId);
+		
+		if(dtoList.size() != 0) {
+			return baseResponseService.responseSuccess(dtoList);
+		}
+			return baseResponseService.responseSuccess("Empty List");
+		
+	}
 	
 }
