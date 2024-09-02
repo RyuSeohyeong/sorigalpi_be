@@ -106,7 +106,8 @@ public class SecurityConfig {
 	    private String[] adminAuth() {
 	        return new String[]{
 	            "/member/listMembers",
-	            "/member/find/email/**"
+	            "/member/find/email/**",
+	            "/notice/update/**"
 	        };
 	    }
 	

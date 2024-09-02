@@ -3,6 +3,8 @@ package com.spring.sorigalpi.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.spring.sorigalpi.base.Base;
@@ -26,7 +28,6 @@ public class NoticeService extends Base {
 	public String createNotice(NoticeDto noticeDto) {
 		
 		String memberId = noticeDto.getMemberId();
-	
 		
 		Member member = memberRepository.findById(memberId).orElse(null);
 		
@@ -49,4 +50,24 @@ public class NoticeService extends Base {
 		return noticeDtoList;
 }
 	
+	@Transactional
+	public String updateNotice(NoticeDto noticeDto, String noticeId) { //공지사항 글 수정
+	
+	    String memberId = noticeDto.getMemberId();
+
+		Member member = memberRepository.findById(memberId).orElse(null);
+		
+		if (member != null && "ROLE_ADMIN".equals(member.getRole())) {
+		
+		Notice notice = noticeRepository.findById(noticeId)
+				.orElseThrow(() -> new OtherException(ErrorCode.NOTICE_NOT_FOUND));
+				
+			notice.updateNotice(noticeDto.getTitle(), noticeDto.getContent());
+			
+			return noticeId;
+	}
+		
+		throw new OtherException(ErrorCode.NOTICE_UPDATE_IMPOSSIBLE);
+	
+	}
 }
