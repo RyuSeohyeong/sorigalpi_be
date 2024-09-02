@@ -1,5 +1,6 @@
 package com.spring.sorigalpi.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +63,12 @@ public class Member extends Base {
 	
 	@Column(name = "emailVerified")
 	private boolean emailVerified;
+	
+	@Column(name = "creDate")
+	private LocalDateTime creDate;
+	
+	@Column(name = "modifiedDate")
+	private LocalDateTime modifiedDate;
 
 	public void updateMember(String nickName, String profileImg,
 			String intro) { /*
@@ -104,6 +111,8 @@ public class Member extends Base {
 				.role(role)
 				.status(status)
 				.emailVerified(emailVerified)
+				.creDate(creDate)
+				.modifiedDate(modifiedDate)
 				.build();
 	}
 }
