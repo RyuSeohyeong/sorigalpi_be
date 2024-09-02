@@ -35,7 +35,7 @@ public class Notice extends Base {
 		this.content = content;
 	}
 	
-	public NoticeDto toDTO() {
+	public NoticeDto toDto() {
 		return NoticeDto.builder()
 				.noticeId(noticeId)
 				.memberId(memberId)

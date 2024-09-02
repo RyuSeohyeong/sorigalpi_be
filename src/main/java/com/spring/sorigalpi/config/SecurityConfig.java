@@ -98,7 +98,8 @@ public class SecurityConfig {
 	            "/member/find/pwd/**",
 	            "/confirmEmail/**",
 	            "/recentViewBook/**",
-	            "/book/**"
+	            "/book/**",
+	            "/notice/listNotices"
 	        };
 	    }
 

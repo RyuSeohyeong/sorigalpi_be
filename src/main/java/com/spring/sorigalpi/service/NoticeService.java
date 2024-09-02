@@ -1,9 +1,14 @@
 package com.spring.sorigalpi.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
+
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.NoticeDto;
 import com.spring.sorigalpi.entity.Member;
+import com.spring.sorigalpi.entity.Notice;
 import com.spring.sorigalpi.exception.ErrorCode;
 import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.repository.MemberRepository;
@@ -35,4 +40,13 @@ public class NoticeService extends Base {
 		
 		throw new OtherException(ErrorCode.NO_AUTHORIZED);
 }
+	
+	public List<NoticeDto> listNotice(){ //공지사항 글 목록 조회
+		
+		List<Notice> noticeList = noticeRepository.findAll();
+		List<NoticeDto> noticeDtoList = noticeList.stream().map(Notice::toDto).collect(Collectors.toList());
+
+		return noticeDtoList;
+}
+	
 }

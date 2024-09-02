@@ -1,7 +1,10 @@
 package com.spring.sorigalpi.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 public class NoticeController {
 	
 	private final NoticeService noticeService;
-
 	private final BaseResponseService baseResponseService;
 	
 	@ApiOperation(
@@ -53,5 +55,20 @@ public class NoticeController {
 		
 		return baseResponseService.responseSuccess(noticeDto);
 	}
+	
+	@ApiOperation(
+	        value = "공지사항 글 조회",
+	        notes = "공지사항 글 목록을 조회한다.")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "공지사항 목록 조회 성공"),
+        @ApiResponse(code = 401, message = "권한 없음")})
+	@GetMapping("/listNotices")
+	public BaseResponse<Object> listNotices() {
+	   
+		List<NoticeDto> noticeList = noticeService.listNotice();
 
+	    return baseResponseService.responseSuccess(noticeList);
+
+}
+	
 }
