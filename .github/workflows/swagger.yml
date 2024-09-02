@@ -9,6 +9,7 @@ on:
       - member
       - springSecurityAndJwt
       - authentication
+      - notice
       
 permissions:
   contents: write

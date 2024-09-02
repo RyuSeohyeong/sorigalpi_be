@@ -19,12 +19,13 @@ public enum ErrorCode {
 	MEMBER_EXISTED(HttpStatus.UNAUTHORIZED, "MEMBER_002", "이미 존재하는 회원입니다."),
 	
 	BOOK_NOT_FOUND(HttpStatus.UNAUTHORIZED, "BOOK_001", "존재하지 않는 동화책 입니다."),
-
 	
 	COMMENT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "COMMENT_001", "존재하지 않는 댓글 입니다."),
 
 	USER_INFORMATION_IS_INCORRECT(HttpStatus.UNAUTHORIZED, "BOOK_002", "유저 정보가 일치하지 않습니다."),
-
+	
+	NOTICE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "NOTICE_001", "존재하지 않는 글입니다."),
+	NOTICE_UPDATE_IMPOSSIBLE(HttpStatus.UNAUTHORIZED, "NOTICE_002", "글을 수정할 수 없습니다."),
 	
 	// 403 Forbidden 권한이 없습니다.
 	EXPIRED_TOKEN(HttpStatus.FORBIDDEN, "TOKEN_003", "만료된 토큰입니다."),

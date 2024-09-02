@@ -98,14 +98,17 @@ public class SecurityConfig {
 	            "/member/find/pwd/**",
 	            "/confirmEmail/**",
 	            "/recentViewBook/**",
-	            "/book/**"
+	            "/book/**",
+	            "/notice/listNotices"
 	        };
 	    }
 
 	    private String[] adminAuth() {
 	        return new String[]{
 	            "/member/listMembers",
-	            "/member/find/email/**"
+	            "/member/find/email/**",
+	            "/notice/update/**",
+	            "/notice/delete/**"
 	        };
 	    }
 	
