@@ -45,11 +45,19 @@ public class BookService extends Base{
 	}
 	
 	public List<BookDTO> findByBookName(Map<String, String> param){ //동화책 이름으로 찾기
+		List<Book> bookList;
 		
 		String bookName = param.get("bookName");
 		
-		List<Book> bookList = bookRepository.findAllBybookName(bookName);
+		String asc = param.get("asc");
 		
+		if (asc.equals("asc")) {
+			bookList = bookRepository.findAllBybookNameOrderByCreDateAsc(bookName);
+		}else {
+			bookList = bookRepository.findAllBybookNameOrderByCreDateDesc(bookName);
+		}
+		
+				
 		List<BookDTO> bookDTOList = bookList.stream().map(Book::toDTO).collect(Collectors.toList()); //List<Book> -> List<BookDTO>
 		
 		return bookDTOList; 

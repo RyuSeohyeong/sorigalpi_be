@@ -108,7 +108,7 @@ public class BookController {
 	
 	@ApiOperation(
 			value = "동화책 제목으로 조회 API",
-			notes = "제목으로 모든 동화정보 리스트로 조회")
+			notes = "제목으로 모든 동화정보 리스트로 조회(필요 정보 : bookName, asc / asc : 'asc' 로 요청할 경우 결과를 오름차순으로 반환 기준은 책 생성일)")
 	@PostMapping("/searchByBookName")
 	public BaseResponse<Object> searchByBookName(@RequestBody Map<String, String> param) { //동화책 제목으로 검색
 		
