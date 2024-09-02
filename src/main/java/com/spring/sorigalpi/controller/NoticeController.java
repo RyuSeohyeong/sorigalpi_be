@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -104,6 +105,29 @@ public class NoticeController {
 		
 		return baseResponseService.responseSuccess( noticeService.updateNotice(noticeDto, noticeId));
 		 
+	}
+	
+	@ApiOperation(
+	        value = "공지사항 글 삭제",
+	        notes = "사용자의 ID를 통해 탈퇴한다.")
+	@ApiImplicitParam(
+	        name = "noticeId",
+	        value = "공지사항 글 ID",
+	        required = true,
+	        dataType = "string",
+	        paramType = "path",
+	        defaultValue = "None")
+	@ApiResponses({
+        @ApiResponse(code = 200, message = "공지사항 글 작성 성공"),
+        @ApiResponse(code = 401, message = "공지사항 글 삭제 실패")})
+	@DeleteMapping("/{noticeId}")
+	public BaseResponse<Object> deleteNotice(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable String noticeId) throws BaseException {
+		 
+		NoticeDto noticeDto = new NoticeDto();
+		
+		noticeDto.setMemberId(principalDetails.getMember().getMemberId());
+		
+		return baseResponseService.responseSuccess(noticeService.deleteNotice(noticeDto, noticeId));
 	}
 	
 }

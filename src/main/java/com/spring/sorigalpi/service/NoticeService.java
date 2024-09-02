@@ -29,7 +29,7 @@ public class NoticeService extends Base {
 		
 		String memberId = noticeDto.getMemberId();
 		
-		Member member = memberRepository.findById(memberId).orElse(null);
+		Member member = memberRepository.findById(memberId).orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
 		
 		
 		if (member != null && "ROLE_ADMIN".equals(member.getRole())) {
@@ -55,7 +55,7 @@ public class NoticeService extends Base {
 	
 	    String memberId = noticeDto.getMemberId();
 
-		Member member = memberRepository.findById(memberId).orElse(null);
+		Member member = memberRepository.findById(memberId).orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
 		
 		if (member != null && "ROLE_ADMIN".equals(member.getRole())) {
 		
@@ -70,4 +70,25 @@ public class NoticeService extends Base {
 		throw new OtherException(ErrorCode.NOTICE_UPDATE_IMPOSSIBLE);
 	
 	}
+	
+	@Transactional
+	public String deleteNotice(NoticeDto noticeDto, String noticeId) { // 공지사항 글 삭제
+		
+		String memberId = noticeDto.getMemberId();
+
+		Member member = memberRepository.findById(memberId).orElseThrow(() -> new OtherException(ErrorCode.MEMBER_NOT_FOUND));
+		
+		if (member != null && "ROLE_ADMIN".equals(member.getRole())) {
+			
+			noticeRepository.findById(noticeId)
+					.orElseThrow(() -> new OtherException(ErrorCode.NOTICE_NOT_FOUND));
+
+			noticeRepository.deleteById(noticeId);
+		
+		return "글이 삭제되었습니다.";
+		
+}	
+		throw new OtherException(ErrorCode.INVALID_AUTHORIZATION);
+		
 }
+	}

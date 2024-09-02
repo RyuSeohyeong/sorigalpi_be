@@ -107,7 +107,8 @@ public class SecurityConfig {
 	        return new String[]{
 	            "/member/listMembers",
 	            "/member/find/email/**",
-	            "/notice/update/**"
+	            "/notice/update/**",
+	            "/notice/delete/**"
 	        };
 	    }
 	
