@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.BookDTO;
 import com.spring.sorigalpi.entity.Book;
+import com.spring.sorigalpi.exception.ErrorCode;
+import com.spring.sorigalpi.exception.OtherException;
 import com.spring.sorigalpi.repository.BookRepository;
 
 
@@ -30,13 +32,14 @@ public class BookService extends Base{
 		return bookDTOList;
 	}
 	
-	public Book findByBookId(BookDTO bookDTO) { //동화책 id로 찾기
+	public BookDTO findByBookId(BookDTO bookDTO) { //동화책 id로 찾기
 		
 		UUID bookId = bookDTO.getBookId(); 
 
-		Book bookInfo = bookRepository.findByBookId(bookId);
+		Book entity = bookRepository.findByBookId(bookId)
+				.orElseThrow(()-> new OtherException(ErrorCode.BOOK_NOT_FOUND));;
 		
-		return  bookInfo;
+		return  entity.toDTO();
 		
 	}
 	
@@ -62,21 +65,38 @@ public class BookService extends Base{
 		return bookRepository.save(bookDTO.toEntity()).getBookId().toString();
 	}
 	
-	public void deleteBookById(BookDTO bookDTO) { //동화책 ID로 삭제
+	public String deleteBookById(String memberId, BookDTO bookDTO) { //동화책 ID로 삭제
 		
 		String result;
 		UUID bookId = bookDTO.getBookId();
-		Book bookInfo = bookRepository.findByBookId(bookId);
-		bookRepository.delete(bookInfo);
+		Book entity = bookRepository.findByBookId(bookId)
+				.orElseThrow(()-> new OtherException(ErrorCode.BOOK_NOT_FOUND));
 		
+		String checkMemberId = entity.getMemberId();
+		
+		if (checkMemberId.equals(memberId)) {
+			bookRepository.delete(entity);
+			result = "삭제 성공";
+		}else {
+			result = "삭제 불가 사용자 정보 다름";
+		}
+		return result;
 	}
+	
 	@Transactional
-	public void updateBook(BookDTO bookDTO) {
-		Book bookInfo = bookRepository.findByBookId(bookDTO.getBookId());
-		System.out.println(bookInfo.getCreDate());
+	public String updateBook(String memberId, BookDTO bookDTO) { //책수정
+		Book bookInfo = bookRepository.findByBookId(bookDTO.getBookId())
+				.orElseThrow(()-> new OtherException(ErrorCode.BOOK_NOT_FOUND));
 		
-																							
-		bookRepository.save(bookDTO.toEntity());
+			String checkMemberId = bookInfo.getMemberId();
+			
+			if(checkMemberId.equals(memberId)) {
+				bookInfo.updateBook(bookDTO.getBookName(), bookDTO.getPageNum(), bookDTO.getStatus(), bookDTO.getBlind(), bookDTO.getRecordable(), bookDTO.getInfo());
+				return "수정 완료";
+			}else {
+				return "수정 불가 사용자 정보 불일치";
+			}
+																		
 	}
 	
 

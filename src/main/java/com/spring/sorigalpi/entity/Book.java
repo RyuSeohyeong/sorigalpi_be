@@ -66,6 +66,16 @@ public class Book {
 	@ApiModelProperty(value = "동화책설명", example = "동화책내용 들어감", required = true)
 	private String info;
 	
+	public void updateBook(String bookName, int pageNum, String status, String blind,
+			String recordable, String info) { 
+		this.bookName = bookName;
+		this.pageNum = pageNum;
+		this.status = status;
+		this.blind = blind;
+		this.recordable = recordable;
+		this.info = info;
+	}
+	
 	public BookDTO toDTO() {
 		return BookDTO.builder()
 				.bookId(bookId)
@@ -79,4 +89,7 @@ public class Book {
 				.build();
 				
 	}
+
+	
+
 }
