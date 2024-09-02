@@ -1,6 +1,7 @@
 package com.spring.sorigalpi.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class BookService extends Base{
 	public BookDTO findByBookId(BookDTO bookDTO) { //동화책 id로 찾기
 		
 		UUID bookId = bookDTO.getBookId(); 
-
+		
 		Book entity = bookRepository.findByBookId(bookId)
 				.orElseThrow(()-> new OtherException(ErrorCode.BOOK_NOT_FOUND));;
 		
@@ -43,7 +44,9 @@ public class BookService extends Base{
 		
 	}
 	
-	public List<BookDTO> findByBookName(String bookName){ //동화책 이름으로 찾기
+	public List<BookDTO> findByBookName(Map<String, String> param){ //동화책 이름으로 찾기
+		
+		String bookName = param.get("bookName");
 		
 		List<Book> bookList = bookRepository.findAllBybookName(bookName);
 		

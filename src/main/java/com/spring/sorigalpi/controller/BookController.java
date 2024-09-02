@@ -2,7 +2,7 @@ package com.spring.sorigalpi.controller;
 
 
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -110,9 +110,9 @@ public class BookController {
 			value = "동화책 제목으로 조회 API",
 			notes = "제목으로 모든 동화정보 리스트로 조회")
 	@PostMapping("/searchByBookName")
-	public BaseResponse<Object> searchByBookName(@RequestBody BookDTO bookDTO) { //동화책 제목으로 검색
+	public BaseResponse<Object> searchByBookName(@RequestBody Map<String, String> param) { //동화책 제목으로 검색
 		
-		List<BookDTO> bookList = bookService.findByBookName(bookDTO.getBookName());
+		List<BookDTO> bookList = bookService.findByBookName(param);
 		
 		if(bookList.size() != 0) {
 			return baseResponseService.responseSuccess(bookList);	
