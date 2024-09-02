@@ -3,6 +3,7 @@ package com.spring.sorigalpi.dto;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.sorigalpi.entity.Book;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -38,6 +39,7 @@ public class BookDTO {
 	private String status;
 	
 	@ApiModelProperty(value = "만든날짜", example = "2024-01-01", required = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime creDate;
 	
 	@ApiModelProperty(value = "동화책 신고상태", example = "YES, NO", required = true)
