@@ -12,6 +12,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.sorigalpi.dto.BookDTO;
 
 import io.swagger.annotations.ApiModel;
@@ -83,6 +84,7 @@ public class Book {
 				.bookName(bookName)
 				.pageNum(pageNum)
 				.status(status)
+				.creDate(creDate)
 				.blind(blind)
 				.recordable(recordable)
 				.info(info)

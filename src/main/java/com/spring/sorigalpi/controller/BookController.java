@@ -2,7 +2,7 @@ package com.spring.sorigalpi.controller;
 
 
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -108,16 +108,16 @@ public class BookController {
 	
 	@ApiOperation(
 			value = "동화책 제목으로 조회 API",
-			notes = "제목으로 모든 동화정보 리스트로 조회")
+			notes = "제목으로 모든 동화정보 리스트로 조회(필요 정보 : bookName, asc / asc : 'asc' 로 요청할 경우 결과를 오름차순으로 반환 기준은 책 생성일)")
 	@PostMapping("/searchByBookName")
-	public BaseResponse<Object> searchByBookName(@RequestBody BookDTO bookDTO) { //동화책 제목으로 검색
+	public BaseResponse<Object> searchByBookName(@RequestBody Map<String, String> param) { //동화책 제목으로 검색
 		
-		List<BookDTO> bookList = bookService.findByBookName(bookDTO.getBookName());
+		List<BookDTO> bookList = bookService.findByBookName(param);
 		
 		if(bookList.size() != 0) {
 			return baseResponseService.responseSuccess(bookList);	
 		}else {
-			return baseResponseService.responseSuccess("검색 결과 없음");
+			return baseResponseService.responseSuccess("Empty List");
 		}
 		
 	}
@@ -133,5 +133,20 @@ public class BookController {
 		return baseResponseService.responseSuccess(result);
 	}
 		
+	@ApiOperation(
+			value = "memberId로 책 모두 검색",
+			notes = "내 책장 조회")
+	@PostMapping("/searchByMemberId")
+	public BaseResponse<Object> searchByMemberId(@AuthenticationPrincipal PrincipalDetails principalDetails){//내 책장 조회
+		
+		String memberId = principalDetails.getMember().getMemberId();
+		List<BookDTO> dtoList = bookService.searchByMemberId(memberId);
+		
+		if(dtoList.size() != 0) {
+			return baseResponseService.responseSuccess(dtoList);
+		}
+			return baseResponseService.responseSuccess("Empty List");
+		
+	}
 	
 }
