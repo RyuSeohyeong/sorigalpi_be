@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +25,16 @@ public class BookService extends Base{
 	@Autowired
 	private BookRepository bookRepository;
 
-	public List<BookDTO> getAllBook(){ //동화책 테이블 모든 정보 가져오기
+	public List<BookDTO> getAllBook(Map<String, String> param){ //동화책 테이블 모든 정보 가져오기
+		List<Book> bookList;
+		String asc = param.get("asc");
 		
-		List<Book> bookList = bookRepository.findAll();
-		
+		if(asc.equals("asc")) {
+			bookList = bookRepository.findAll(Sort.by(Sort.Direction.ASC, "creDate"));
+		}else {
+			bookList = bookRepository.findAll(Sort.by(Sort.Direction.DESC, "creDate"));
+		}
+	
 		List<BookDTO> bookDTOList = bookList.stream().map(Book::toDTO).collect(Collectors.toList()); //List<Book> -> List<BookDTO>
 		
 		return bookDTOList;

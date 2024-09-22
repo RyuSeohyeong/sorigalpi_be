@@ -52,7 +52,7 @@ public class BookController {
 	@GetMapping("/getAllBook") //동화책 테이블의 모든 정보 가져오기
 	public BaseResponse<Object> allBookList(@RequestBody Map<String, String> param){
 		
-		List<BookDTO> bookList = bookService.getAllBook();
+		List<BookDTO> bookList = bookService.getAllBook(param);
 		
 		return baseResponseService.responseSuccess(bookList);
 			
