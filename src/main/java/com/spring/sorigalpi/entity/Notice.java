@@ -1,10 +1,14 @@
 package com.spring.sorigalpi.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.spring.sorigalpi.base.Base;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import com.spring.sorigalpi.dto.NoticeDto;
 
 import lombok.AccessLevel;
@@ -19,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Getter
-public class Notice extends Base {
+public class Notice {
 	
 	@Id
 	private String noticeId;
@@ -29,6 +33,12 @@ public class Notice extends Base {
 	private String title;
 	
 	private String content;
+	
+	@CreatedDate
+	private LocalDateTime creDate;
+	
+	@LastModifiedDate
+	private LocalDateTime modifiedDate;
 
 	public void updateNotice(String title, String content) {
 		this.title = title;
@@ -41,6 +51,8 @@ public class Notice extends Base {
 				.memberId(memberId)
 				.title(title)
 				.content(content)
+				.creDate(creDate)
+				.modifiedDate(modifiedDate)
 				.build();
 	}
 }
