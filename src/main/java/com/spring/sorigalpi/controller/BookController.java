@@ -50,15 +50,11 @@ public class BookController {
 			notes = "동화책 테이블의 모든 정보를 불러오는 API") 
 	@ApiResponse(code = 200, message = "성공")
 	@GetMapping("/getAllBook") //동화책 테이블의 모든 정보 가져오기
-	public BaseResponse<Object> allBookList(){
+	public BaseResponse<Object> allBookList(@RequestBody Map<String, String> param){
 		
-		List<BookDTO> bookList = bookService.getAllBook();
+		List<BookDTO> bookList = bookService.getAllBook(param);
 		
-		if (bookList.size() != 0) {
-			return baseResponseService.responseSuccess(bookList);
-		}else {
-			return baseResponseService.responseSuccess("정보 없음");
-		}
+		return baseResponseService.responseSuccess(bookList);
 			
 	}
 	
@@ -103,7 +99,7 @@ public class BookController {
 		
 		BookDTO resultDTO =  bookService.findByBookId(bookDTO);
 		
-			return baseResponseService.responseSuccess(resultDTO);
+		return baseResponseService.responseSuccess(resultDTO);
 	}
 	
 	@ApiOperation(
@@ -114,11 +110,7 @@ public class BookController {
 		
 		List<BookDTO> bookList = bookService.findByBookName(param);
 		
-		if(bookList.size() != 0) {
-			return baseResponseService.responseSuccess(bookList);	
-		}else {
-			return baseResponseService.responseSuccess("Empty List");
-		}
+		return baseResponseService.responseSuccess(bookList);	
 		
 	}
 	@ApiOperation(
@@ -142,10 +134,7 @@ public class BookController {
 		String memberId = principalDetails.getMember().getMemberId();
 		List<BookDTO> dtoList = bookService.searchByMemberId(memberId);
 		
-		if(dtoList.size() != 0) {
-			return baseResponseService.responseSuccess(dtoList);
-		}
-			return baseResponseService.responseSuccess("Empty List");
+		return baseResponseService.responseSuccess(dtoList);
 		
 	}
 	
