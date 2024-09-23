@@ -2,6 +2,7 @@ package com.spring.sorigalpi.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.sorigalpi.entity.Member;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
@@ -50,15 +51,17 @@ public class MemberDto {
 	private boolean emailVerified;
 	
 	@Schema(description = "만들어진 날짜", example = "YYYY-MM-NN 00:00:00", required = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime creDate;
 	
 	@Schema(description = "수정된 날짜", example = "YYYY-MM-NN 00:00:00", required = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime modifiedDate;
 
 	// Entity 클래스인 Member에 객체를 주입하여 Entity 클래스를 반환하는 메소드
 	public Member toEntity() {
 		return Member.builder().memberId(memberId).email(email).pwd(pwd).nickName(nickName).profileImg(profileImg)
-				.intro(intro).role(role).status(status).emailVerified(emailVerified).build();
+				.intro(intro).role(role).status(status).emailVerified(emailVerified).creDate(creDate).modifiedDate(modifiedDate).build();
 	}
 	
 	@Getter

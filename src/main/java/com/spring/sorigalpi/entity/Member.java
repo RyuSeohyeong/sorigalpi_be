@@ -12,7 +12,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.spring.sorigalpi.base.Base;
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
 
@@ -33,7 +32,7 @@ import lombok.NoArgsConstructor;
 										 * 경우 @EqualsAndHashCode(callSuper=false) 를 선언함 - 자식 클래스의 필드를 사용하기위해
 										 */
 
-public class Member extends Base {
+public class Member {
 
 	@Id
 	@Column(name = "memberId")

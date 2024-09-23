@@ -59,14 +59,11 @@ public class MemberService extends Base {
 		memberDto.setStatus(Status.ACTIVE);
 		memberDto.setEmailVerified(true);
 		
-		Member member = memberDto.toEntity();
-		
-		memberRepository.save(member);
+		return memberRepository.save(memberDto.toEntity());
 		
 		//회원가입을 위한 이메일 토큰 생성 및 메일 발송
        //emailTokenService.createEmailToken(memberDto.getMemberId(), memberDto.getEmail());
 
-		return member;
 		
 	    } else {
 	    	
