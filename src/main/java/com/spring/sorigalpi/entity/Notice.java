@@ -3,11 +3,13 @@ package com.spring.sorigalpi.entity;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.spring.sorigalpi.dto.NoticeDto;
 
@@ -22,6 +24,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor 
 @Builder
 @Entity
+@EntityListeners(AuditingEntityListener.class)
+
 @Getter
 public class Notice {
 	
