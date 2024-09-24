@@ -58,6 +58,8 @@ public class MemberService extends Base {
 		memberDto.setRole("ROLE_USER");
 		memberDto.setStatus(Status.ACTIVE);
 		memberDto.setEmailVerified(true);
+		memberDto.setProfileImg("No Image");
+		memberDto.setIntro("No Intro");
 		
 		return memberRepository.save(memberDto.toEntity());
 		
