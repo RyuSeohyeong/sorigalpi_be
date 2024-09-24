@@ -58,7 +58,9 @@ public class NoticeController {
 		
 		noticeService.createNotice(noticeDto);
 		
-		return baseResponseService.responseSuccess(noticeDto);
+		String noticeId = noticeDto.getNoticeId();
+		
+		return baseResponseService.responseSuccess(noticeId);
 	}
 	
 	@ApiOperation(
