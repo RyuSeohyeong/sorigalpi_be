@@ -7,10 +7,15 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.spring.sorigalpi.dto.MemberDto;
 import com.spring.sorigalpi.enumtype.MemberEnum.Status;
@@ -27,6 +32,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(callSuper = false) /*
 										 * 객체의 직접적인 서브클래스가 아니면 super class를 호출하기 때문에 별도로 구현하는 Value Object가 없을
 										 * 경우 @EqualsAndHashCode(callSuper=false) 를 선언함 - 자식 클래스의 필드를 사용하기위해
@@ -64,9 +70,11 @@ public class Member {
 	private boolean emailVerified;
 	
 	@Column(name = "creDate")
+	@CreatedDate
 	private LocalDateTime creDate;
 	
 	@Column(name = "modifiedDate")
+	@LastModifiedDate
 	private LocalDateTime modifiedDate;
 
 	public void updateMember(String nickName, String profileImg,

@@ -9,7 +9,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,11 +63,13 @@ public class MemberController {
 	        @ApiResponse(code = 200, message = "회원가입 성공"),
 	        @ApiResponse(code = 401, message = "권한 없음")})
 	@PostMapping("/signUp")
-	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto) throws BaseException, MessagingException{
+	public BaseResponse<Object> createMember(@RequestBody MemberDto memberDto ) throws BaseException, MessagingException{
 
 			memberService.createMember(memberDto);
+			
+			String memberId = memberDto.getMemberId();
 
-			return baseResponseService.responseSuccess(memberDto);
+			return baseResponseService.responseSuccess(memberId);
 	}
 	
 	@ApiOperation(
