@@ -127,4 +127,20 @@ public class BookService extends Base{
 		
 	}
 
+	public List<BookDTO> myBookList (String memberId, Map<String, String> param){ //내 책장 조회
+		
+		List<Book> entityList;
+		String asc = param.get("asc");
+		
+		if(asc.equals("asc")) {
+			entityList = bookRepository.findAllByMemberIdOrderByCreDateAsc(memberId);
+		}else {
+			entityList = bookRepository.findAllByMemberIdOrderByCreDateDesc(memberId);
+		}
+		
+		List<BookDTO> dtoList = entityList.stream().map(Book::toDTO).collect(Collectors.toList()); //List<Book> -> List<BookDTO>
+		
+		return dtoList;
+		
+	}
 }

@@ -104,7 +104,7 @@ public class BookController {
 	
 	@ApiOperation(
 			value = "동화책 제목으로 조회 API",
-			notes = "제목으로 모든 동화정보 리스트로 조회(필요 정보 : bookName, asc / asc : 'asc' 로 요청할 경우 결과를 오름차순으로 반환 기준은 책 생성일)")
+			notes = "제목으로 모든 동화정보 리스트로 조회(필수 파라미터 : bookName, asc / asc : 'asc' 로 요청할 경우 결과를 오름차순으로 반환 기준은 책 생성일, asc : '' 빈칸으로 요청시 생성일 기준 내림차순)")
 	@PostMapping("/searchByBookName")
 	public BaseResponse<Object> searchByBookName(@RequestBody Map<String, String> param) { //동화책 제목으로 검색
 		
@@ -127,12 +127,26 @@ public class BookController {
 		
 	@ApiOperation(
 			value = "memberId로 책 모두 검색",
-			notes = "내 책장 조회")
+			notes = "")
 	@PostMapping("/searchByMemberId")
-	public BaseResponse<Object> searchByMemberId(@AuthenticationPrincipal PrincipalDetails principalDetails){//내 책장 조회
+	public BaseResponse<Object> searchByMemberId(@AuthenticationPrincipal PrincipalDetails principalDetails){
 		
 		String memberId = principalDetails.getMember().getMemberId();
 		List<BookDTO> dtoList = bookService.searchByMemberId(memberId);
+		
+		return baseResponseService.responseSuccess(dtoList);
+		
+	}
+	
+	//내 책장 조회
+	@ApiOperation(
+			value = "내 책장 조회",
+			notes = "로그인한 아이디로 검색 (필수 파라미터 :  asc / asc : 'asc' 로 요청할 경우 결과를 오름차순으로 반환 기준은 책 생성일, asc : '' 빈칸으로 요청시 생성일 기준 내림차순)")
+	@PostMapping("/myBookList")
+	public BaseResponse<Object> myBookList(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Map<String, String> param){//내 책장 조회
+		
+		String memberId = principalDetails.getMember().getMemberId();
+		List<BookDTO> dtoList = bookService.myBookList(memberId, param);
 		
 		return baseResponseService.responseSuccess(dtoList);
 		
